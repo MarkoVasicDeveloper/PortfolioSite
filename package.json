@@ -1,0 +1,16 @@
+{
+  "name": "portfolio---parcel",
+  "version": "1.0.0",
+  "description": "Portfolio site in THREE.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "prod": "parcel build src/index.html"
+  },
+  "author": "Marko Vasic",
+  "license": "ISC",
+  "dependencies": {
+    "parcel": "^2.7.0",
+    "three": "^0.145.0"
+  }
+}
