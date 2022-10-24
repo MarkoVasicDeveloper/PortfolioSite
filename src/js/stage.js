@@ -12,9 +12,11 @@ export function stage () {
     const bgScene = new THREE.Scene();
     const bgCamera = new THREE.Camera();
 
-    // controls = new OrbitControls( this.camera, this.renderer.domElement );
+    // controls = new OrbitControls( camera, renderer.domElement );
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
     camera.position.set(0, 3, 0);
-    camera.lookAt(0, 2, -5);
+    // camera.lookAt(0, 2, -5);
     // controls.update();
 
     const ambientalLight = new THREE.AmbientLight(0xffffff, 1);

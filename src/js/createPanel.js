@@ -7,34 +7,33 @@ import { underwaterUniforms } from '../shader/uniforms/uniforms';
 export function createPanel() {
         const myPanelGroup = new THREE.Group();
 
-        const geometry = new THREE.PlaneGeometry(6,4,20,20);
+        const geometry = new THREE.PlaneGeometry(6,4,30,20);
         const material = new THREE.MeshStandardMaterial({
             map: new THREE.TextureLoader().load(myPicture)
         });
 
         const mesh = new THREE.Mesh(geometry, material);
 
+        mesh.name = 'link';
+        mesh.userData.link = 'https://join.skype.com/invite/GC84cpUFYwdI'
+
         const linePoints = [
-            new THREE.Vector3(0, 1, 0),
+            new THREE.Vector3(0, 1.5, 0),
             new THREE.Vector3(0, 4, 0),
         ]
 
         const lineGeometry = new THREE.BufferGeometry().setFromPoints( linePoints );
-        const lineMaterial = new THREE.LineBasicMaterial({color: new THREE.Color('#333333')});
+        const lineMaterial = new THREE.LineBasicMaterial({color: new THREE.Color('#525B68')});
         const lineMesh = new THREE.Line(lineGeometry, lineMaterial);
         lineMesh.position.set(3.5, -5, 0);
 
-        const sphereGeometry = new THREE.SphereGeometry(0.1,10,10);
-        const sphereMaterial = new THREE.MeshStandardMaterial({color: new THREE.Color('#333333')});
+        const sphereGeometry = new THREE.SphereGeometry(0.05,10,10);
+        const sphereMaterial = new THREE.MeshStandardMaterial({color: new THREE.Color('#525B68')});
         const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphereMesh.position.set(0, 4.5, 0);
+        sphereMesh.position.set(0, 4.4, 0);
 
-        const ringGeometry = new THREE.RingGeometry(0.17, 0.2, 20);
-        const ringMaterial = new THREE.ShaderMaterial({
-            fragmentShader: ringFragment,
-            vertexShader: ringVertex,
-            uniforms: underwaterUniforms
-        });
+        const ringGeometry = new THREE.RingGeometry(0.07, 0.09, 30);
+        const ringMaterial = new THREE.MeshStandardMaterial({color: new THREE.Color('#525B68')});
         const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
 
         sphereMesh.add(ringMesh);
