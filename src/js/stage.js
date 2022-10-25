@@ -6,7 +6,7 @@ import {underwaterVertex} from '../shader/vertex/underwater.js';
 
 export function stage () {
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerWidth, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerWidth, 0.1, 30);
     const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({antialias: true});
     const bgScene = new THREE.Scene();
@@ -38,7 +38,8 @@ export function stage () {
     bgScene.add(bgMesh);
 
     renderer.autoClear = false;
-    renderer.shadowMap = true;
+    // renderer.shadowMap = true;
+    renderer.setClearColor(new THREE.Color('#111111'))
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     document.body.appendChild(renderer.domElement);
     renderer.setSize(window.innerWidth, window.innerHeight);

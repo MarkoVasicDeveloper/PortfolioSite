@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { stage } from './stage';
 import { onResize } from './onResize';
-import { underwaterUniforms } from '../shader/uniforms/uniforms';
+import { underwaterUniforms, planeUniforms } from '../shader/uniforms/uniforms';
 import { road } from './road.js';
 import { path } from './path.js';
 import { moveCamera } from './moveCamera';
@@ -11,6 +11,7 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import loadedFont from '/static/font.json';
 import addText from './addText';
 import { raycasterHover, raycasterClick } from './raycaster/raycaster';
+import { pointer } from './raycaster/raycaster';
 
 const time = new THREE.Clock();
 
@@ -43,22 +44,24 @@ let frame = 1;
 
 function animation() {
     underwaterUniforms.time.value = time.getElapsedTime();
+    planeUniforms.time.value = time.getElapsedTime();
     
-    ring.scale.set(1 + Math.sin(frame) * 2, 1 + Math.sin(frame) * 2, 1);
+    ring.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
     frame += 0.07;
 
-    for (let y=0; y<20+1; y++) {
-        for (let x=0; x<30+1; x++) {
-            const index = x + y * (30+1);
+    for (let y=0; y<200+1; y++) {
+        for (let x=0; x<300+1; x++) {
+            const index = x + y * (300+1);
             const pos = vertex.fromBufferAttribute( positionAttribute, index );
             const time = Date.now() * 0.2 / 50;
-            pos.z = Math.sin(0.2 * x + 0.2 * y - time) * 0.1 * x / 6;
+            pos.z = Math.sin(0.08 * x + 0.08 * y - time) * 0.03 * x / 60;
             geometry.attributes.position.setXYZ( index, pos.x, pos.y, pos.z );
         }
     }
     
     myPanel.children[0].geometry.attributes.position.needsUpdate = true;
 
+    // camera.updateProjectionMatrix();
     renderer.clear();
     renderer.render(bgScene, bgCamera);
     renderer.render(scene, camera);
