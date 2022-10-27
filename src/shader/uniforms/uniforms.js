@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import myPicture from '../../texture/myPicture.jpg';
 import { planeHover } from '../../js/raycaster/raycaster';
+import washerPng from '../../texture/washer.png';
+import landaryJpg from '../../texture/landary.jpg';
+import crazyBurger from '../../texture/crazyBurger.png'
+
 
 export const underwaterUniforms = {
     resolution: { value: 1.9268564},
@@ -14,4 +18,26 @@ export const planeUniforms = {
     image: {type: 't', value: new THREE.TextureLoader().load(myPicture)},
     time: {type: 'f', value: 0},
     hover: {type: 'f', value: 0}
+}
+
+export const washerUniforms = {
+    image: {type: 't', value: new THREE.TextureLoader().load(washerPng)},
+    time: {type: 'f', value: 0},
+    hover: {type: 'f', value: 0}
+}
+
+export const landaryUniforms = {
+    image: {type: 't', value: new THREE.TextureLoader().load(landaryJpg)},
+    time: {type: 'f', value: 0},
+    hover: {type: 'f', value: 0}
+}
+
+export const crazyBurgerUniforms = {
+    image: {type: 't', value: new THREE.TextureLoader().load(crazyBurger)},
+    time: {type: 'f', value: 0},
+    hover: {type: 'f', value: 0}
+}
+
+export const lightUniforms = {
+    time: {type: 'f', value: 0}
 }

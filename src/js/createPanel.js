@@ -35,18 +35,14 @@ export function createPanel() {
         const material = new THREE.ShaderMaterial({
             vertexShader: planeVertex,
             fragmentShader: planeFragment,
-            uniforms: planeUniforms,
-            depthTest: false,
-            depthWrite: false
+            uniforms: planeUniforms
         });
-        console.log(geometry)
+        
         const mesh = new THREE.Points(geometry, material);
 
         mesh.name = 'link';
         mesh.userData.link = 'https://join.skype.com/invite/GC84cpUFYwdI';
-        mesh.userData.plane = true;
-
-        mesh.updateMatrixWorld();
+        mesh.userData.myPlane = true;
 
         const linePoints = [
             new THREE.Vector3(0, 1.5, 0),
@@ -76,6 +72,16 @@ export function createPanel() {
 
         myPanelGroup.position.set(-5, 4, -10);
 
-        myPanelGroup.updateMatrixWorld();
         return myPanelGroup;
+    }
+
+    export function clonePanel (panel, http, uniforms, panelMark) {
+        panel.children[0].userData.link = http;
+        panel.children[0].userData.panel = panelMark;
+        panel.children[0].material = new THREE.ShaderMaterial({
+            vertexShader: planeVertex,
+            fragmentShader: planeFragment,
+            uniforms: uniforms
+        })
+        return panel;
     }

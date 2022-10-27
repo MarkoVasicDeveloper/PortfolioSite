@@ -10,7 +10,13 @@
   "author": "Marko Vasic",
   "license": "ISC",
   "dependencies": {
+    "@parcel/config-default": "^2.7.0",
+    "gsap": "^3.11.3",
     "parcel": "^2.7.0",
     "three": "^0.145.0"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "parcel-reporter-static-files-copy": "^1.4.0"
   }
 }

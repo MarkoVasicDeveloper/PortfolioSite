@@ -29,8 +29,8 @@ export default function addText (panelArray) {
 		})
 
 		modelLoader.load(gitModel, (model) => {
-			model.scene.scale.set(0.2,0.2,0.2);
-			model.scene.position.set(4.5, -2, 0);
+			model.scene.scale.set(0.2,0.2,0.05);
+			model.scene.position.set(4.5, -2.5, 0);
 			model.scene.children[0].name = 'link';
 			model.scene.children[0].userData.link = httpLink[index];
 			model.scene.children[1].name = 'link';
@@ -39,8 +39,8 @@ export default function addText (panelArray) {
 		})
 
 		index === 0 ? modelLoader.load(linkedinModel, (model) => {
-			model.scene.scale.set(0.2,0.2,0.2);
-			model.scene.position.set(6, -2, 0);
+			model.scene.scale.set(0.2,0.2,0.05);
+			model.scene.position.set(6, -2.5, 0);
 			model.scene.children[0].name = 'link';
 			model.scene.children[0].userData.link = 'https://www.linkedin.com/in/marko-vasic-developer/';
 			model.scene.children[1].name = 'link';
