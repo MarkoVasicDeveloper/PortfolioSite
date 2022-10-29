@@ -17,7 +17,6 @@ export function addTitle(scene) {
 		        size: 2.9,
 		        font: font
 		    });
-			console.log(textGeometry)
 
 		    const textMaterial = new THREE.MeshStandardMaterial({color: new THREE.Color('#525B68')});
 		    const textMesh = new THREE.Mesh(textGeometry, textMaterial);

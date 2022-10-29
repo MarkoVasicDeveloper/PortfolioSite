@@ -7,10 +7,8 @@ import crazyBurger from '../../texture/crazyBurger.png'
 
 
 export const underwaterUniforms = {
-    resolution: { value: 1.9268564},
-    backgroundAlpha: { value: 0.0},
-    rayBrightness: { value: 1.2508424},
-    rayColor: { value: { r: 0.0, g: .8, b: 0.10196078431372549}},
+    speed: { value: 2.0},
+    scale: { value: 3},
     time: { value: 0.0}
 }
 
@@ -40,4 +38,13 @@ export const crazyBurgerUniforms = {
 
 export const lightUniforms = {
     time: {type: 'f', value: 0}
+}
+
+export const fogUniforms = {
+    time: {type: 'f', value: 0},
+    color: {value: {r: 1, g: 1, b: 1}},
+    twinkleSpeed: {value: 20},
+    speed: { value: 0.0001},
+    brightness: { value: 0.0018},
+    distfading: { value: 0.2}
 }

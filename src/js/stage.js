@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import {underwaterFragment} from '../shader/fragment/underwater.js';
-import { underwaterUniforms } from '../shader/uniforms/uniforms';
+import { underwaterUniforms, fogUniforms } from '../shader/uniforms/uniforms';
 import {underwaterVertex} from '../shader/vertex/underwater.js';
+import { fogVertex } from '../shader/vertex/fog';
+import { fogFragment } from '../shader/fragment/fog';
 
 export function stage () {
 
@@ -26,9 +28,9 @@ export function stage () {
 
     const bgGeometry = new THREE.PlaneGeometry(2,2);
     const bgMaterial = new THREE.ShaderMaterial({
-        fragmentShader: underwaterFragment,
-        vertexShader: underwaterVertex,
-        uniforms: underwaterUniforms,
+        fragmentShader: fogFragment,
+        vertexShader: fogVertex,
+        uniforms: fogUniforms,
         transparent: true,
         depthTest: false,
         depthWrite: false

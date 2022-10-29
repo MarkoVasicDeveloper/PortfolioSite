@@ -1,35 +1,26 @@
 export const underwaterFragment = `
 precision highp float;
-precision highp int;
 
+uniform float time;
+uniform float scale;
+uniform float speed;
+
+varying vec3 vNormal;
 varying vec2 vUv;
 
-uniform float resolution;
-uniform float time;
-uniform float backgroundAlpha;
-uniform float rayBrightness;
-uniform vec3 rayColor;
-
-float causticPatternFn(vec2 pos) {
-	return (
-        sin( pos.x * 60.0 + time )
-		+ pow( sin( -pos.x * 13.0 + time ), 1.0 )
-		+ pow( sin( pos.x * 30.0 + time ), 2.0 )
-		+ pow( sin( pos.x * 50.0 + time ), 2.0 )
-		+ pow( sin( pos.x * 80.0 + time ), 2.0 )
-		+ pow( sin( pos.x * 90.0 + time ), 2.0 )
-		+ pow( sin( pos.x * 12.0 + time ), 2.0 )
-    ) / 2.0;
+float rand(in vec2 p)
+{
+	return abs( fract( sin(p.x * 95325.328 + p.y * -48674.077) + cos(p.x * -46738.322 + p.y * 76485.077) + time * speed ) -.5)+.5;
 }
-
-void main( void ) {
-	vec2 uv = ( vUv - 0.5 ) * resolution;
-	float pattern = pow(
-	    0.2 * rayBrightness * causticPatternFn( uv ),
-	    4.0
-    );
 	
-	gl_FragColor = vec4( rayColor, max( backgroundAlpha, pattern ) );
+void main( void ) {
+	
+	vec2 position = ( vUv.xy ) * scale;
 
+	vec3 color = vec3(rand( vec2(floor(position.x), floor(position.y) ) ), rand( vec2(floor(position.x) , floor(position.x) ) ) , rand( vec2(floor(position.x*.5) , floor(position.y*.5) ) ));
+	float scale = 1.-pow( pow( (mod( position.x, 1.)-.5), 2.) + pow( (mod( position.y, 1.)-.5), 2.), .7 );
+	
+	gl_FragColor = vec4( color*scale, 1.);
 }
+
 `

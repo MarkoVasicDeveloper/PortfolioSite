@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { stage } from './stage';
 import { onResize } from './onResize';
-import { underwaterUniforms, planeUniforms, washerUniforms, landaryUniforms, lightUniforms, crazyBurgerUniforms } from '../shader/uniforms/uniforms';
+import { underwaterUniforms, planeUniforms, washerUniforms, landaryUniforms, lightUniforms, crazyBurgerUniforms, fogUniforms } from '../shader/uniforms/uniforms';
 import { road } from './road.js';
 import { path } from './path.js';
 import { moveCamera } from './moveCamera';
@@ -15,6 +15,9 @@ import { pointer } from './raycaster/raycaster';
 import washerPng from '../texture/washer.png';
 import { sphereGroup } from './sphereGroup';
 import { addTitle } from './addTitle';
+import { myName } from './myName';
+import { loadingModel } from './loadingModel';
+import { technologyText } from './technologyText';
 
 const time = new THREE.Clock();
 
@@ -55,6 +58,9 @@ window.addEventListener('pointermove', (e) => raycasterHover(e, camera, scene));
 window.addEventListener('click', (e) => raycasterClick(camera, scene));
 
 addTitle(scene);
+myName(scene);
+loadingModel(scene);
+technologyText(scene);
 
 const position = myPanel.children[0].geometry.attributes.position.array;
 
@@ -72,9 +78,9 @@ function animation() {
     landaryUniforms.time.value = time.getElapsedTime();
     lightUniforms.time.value = time.getElapsedTime();
     crazyBurgerUniforms.time.value = time.getElapsedTime();
+    fogUniforms.time.value = time.getElapsedTime();
 
     sphere.children[0].rotateY(0.2);
-    // sphere.children[1].rotateX(0.2);
     sphere.rotateX(0.05)
     
     ring.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
