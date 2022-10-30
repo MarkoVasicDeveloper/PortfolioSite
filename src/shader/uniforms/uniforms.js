@@ -48,3 +48,12 @@ export const fogUniforms = {
     brightness: { value: 0.0018},
     distfading: { value: 0.2}
 }
+
+export const matrixUniforms = {
+    color: { value: { r: 0, g: 0.7019607843137254, b: 0.1450980392156863}},
+    resolution: { value: { x: 1.946153846153846156, y: 1.936923076923076925}},
+    charSize: { value: { x: 0.8769230769230769, y: 0.9384615384615385}},
+    charResolution: { value : 7.72425155},
+    speed: { value: 18.26450037},
+    time: { value: 0}
+}
