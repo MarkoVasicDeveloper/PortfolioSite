@@ -8,7 +8,7 @@ import { fogFragment } from '../shader/fragment/fog';
 
 export function stage () {
 
-    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerWidth, 0.1, 35);
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerWidth, 0.1, 30);
     const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({antialias: true});
     const bgScene = new THREE.Scene();

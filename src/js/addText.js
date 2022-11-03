@@ -4,9 +4,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import loadedFont from '/static/font.json';
 import { panelText } from '../config/text';
-import gitModel from '/static/git.glb';
 import linkedinModel from '/static/linkedin.glb';
-import {httpLink} from '../config/link';
+import {httpLink, planeModels, scaleModels, modelsPosition, modelsRotation} from '../config/link';
 
 const loader = new FontLoader();
 const modelLoader = new GLTFLoader();
@@ -28,9 +27,10 @@ export default function addText (panelArray) {
 	    panel.add(textMesh);
 		})
 
-		modelLoader.load(gitModel, (model) => {
-			model.scene.scale.set(0.2,0.2,0.05);
-			model.scene.position.set(4.5, -2.5, 0);
+		modelLoader.load(planeModels[index], (model) => {
+			model.scene.scale.set(...scaleModels[index]);
+			model.scene.position.set(...modelsPosition[index]);
+			model.scene.rotation.y = modelsRotation[index];
 			model.scene.children[0].name = 'link';
 			model.scene.children[0].userData.link = httpLink[index];
 			model.scene.children[1].name = 'link';

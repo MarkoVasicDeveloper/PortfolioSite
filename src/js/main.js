@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { stage } from './stage';
 import { onResize } from './onResize';
-import { underwaterUniforms, planeUniforms, washerUniforms, landaryUniforms, lightUniforms, crazyBurgerUniforms, fogUniforms, matrixUniforms } from '../shader/uniforms/uniforms';
+import { underwaterUniforms, planeUniforms, washerUniforms, landaryUniforms, lightUniforms, crazyBurgerUniforms, fogUniforms, matrixUniforms, cssUniforms, reactUniforms, pythonUniforms } from '../shader/uniforms/uniforms';
 import { road } from './road.js';
 import { path } from './path.js';
 import { moveCamera } from './moveCamera';
@@ -18,7 +18,6 @@ import { addTitle } from './addTitle';
 import { myName } from './myName';
 import { loadingModel, dracoModel } from './loadingModel';
 import { technologyText } from './technologyText';
-
 const time = new THREE.Clock();
 
 const roadObject = road();
@@ -41,16 +40,32 @@ const crazyBurgerPanel = clonePanel(myPanel.clone(), 'https://markovasicdevelope
 crazyBurgerPanel.rotation.y = -Math.PI / 10;
 crazyBurgerPanel.position.set(80, 4, -18);
 
+const reactPanel = clonePanel(myPanel.clone(), 'https://reactjs.org', reactUniforms, 'technology' );
+reactPanel.rotation.y = -Math.PI / 0.65;
+reactPanel.position.set(34, 3, 65);
+
+const cssPanel = clonePanel(myPanel.clone(), 'https://www.w3schools.com/css/', cssUniforms, 'technology' );
+cssPanel.rotation.y = -Math.PI / 0.75;
+cssPanel.position.set(72, 3, 71);
+
+const pythonPanel = clonePanel(myPanel.clone(), 'https://www.w3schools.com/css/', pythonUniforms, 'technology' );
+pythonPanel.rotation.y = -Math.PI / 0.6;
+pythonPanel.position.set(4, 3, 42);
+
+
 const washerRing = washerPanel.children[1].children[0].children[0];
 const ring = myPanel.children[1].children[0].children[0];
 const landaryRing = landaryPanel.children[1].children[0].children[0];
 const crazyBurgerRing = crazyBurgerPanel.children[1].children[0].children[0];
+const reactPanelRing = reactPanel.children[1].children[0].children[0];
+const cssPanelRing = cssPanel.children[1].children[0].children[0];
+const pythonPanelRing = cssPanel.children[1].children[0].children[0];
 
-addText([myPanel, washerPanel, landaryPanel, crazyBurgerPanel]);
+addText([myPanel, washerPanel, landaryPanel, crazyBurgerPanel, cssPanel, reactPanel, pythonPanel]);
 
 const { camera, scene, bgCamera, bgScene, renderer } = stage();
 
-scene.add(roadObject, myPanel, washerPanel, landaryPanel, sphere, crazyBurgerPanel);
+scene.add(roadObject, myPanel, washerPanel, landaryPanel, sphere, crazyBurgerPanel, reactPanel, cssPanel, pythonPanel);
 
 window.addEventListener('resize', () => onResize(camera, renderer));
 window.addEventListener('wheel', (e) => moveCamera(e, camera, points));
@@ -81,6 +96,9 @@ function animation() {
     crazyBurgerUniforms.time.value = time.getElapsedTime();
     fogUniforms.time.value = time.getElapsedTime();
     matrixUniforms.time.value = time.getElapsedTime();
+    cssUniforms.time.value = time.getElapsedTime();
+    reactUniforms.time.value = time.getElapsedTime();
+    pythonUniforms.time.value = time.getElapsedTime();
 
     sphere.children[0].rotateY(0.2);
     sphere.rotateX(0.05)
@@ -89,6 +107,10 @@ function animation() {
     washerRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
     landaryRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
     crazyBurgerRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
+    reactPanelRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
+    cssPanelRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
+    pythonPanelRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
+
     frame += 0.07;
 
     for (let y=0; y<200+1; y++) {

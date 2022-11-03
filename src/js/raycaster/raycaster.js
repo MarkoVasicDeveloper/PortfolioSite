@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { planeUniforms, washerUniforms, landaryUniforms, crazyBurgerUniforms } from '../../shader/uniforms/uniforms';
+import { planeUniforms, washerUniforms, landaryUniforms, crazyBurgerUniforms, cssUniforms, reactUniforms, pythonUniforms } from '../../shader/uniforms/uniforms';
 import gsap from 'gsap';
 import { cameraLookAt } from '../moveCamera';
 
@@ -47,6 +47,17 @@ export function raycasterHover(event, camera, scene) {
 
 	}else {
 		gsap.to(crazyBurgerUniforms.hover, {value: 0, duration: 1});
+	}
+
+	if(intersects.length > 0 && intersects[ 0 ].object.userData.panel === 'technology'){
+		gsap.to(cssUniforms.hover, {value: 0.05, duration: 1});
+		gsap.to(reactUniforms.hover, {value: 0.05, duration: 1});
+		gsap.to(pythonUniforms.hover, {value: 0.05, duration: 1});
+
+	}else {
+		gsap.to(cssUniforms.hover, {value: 0, duration: 1});
+		gsap.to(reactUniforms.hover, {value: 0, duration: 1});
+		gsap.to(pythonUniforms.hover, {value: 0, duration: 1});
 	}
 
 	if(intersects.length > 0 && intersects[ 0 ].object.name === 'electric'){

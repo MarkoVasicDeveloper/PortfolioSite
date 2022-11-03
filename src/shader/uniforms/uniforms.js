@@ -3,7 +3,10 @@ import myPicture from '../../texture/myPicture.jpg';
 import { planeHover } from '../../js/raycaster/raycaster';
 import washerPng from '../../texture/washer.png';
 import landaryJpg from '../../texture/landary.jpg';
-import crazyBurger from '../../texture/crazyBurger.png'
+import crazyBurger from '../../texture/crazyBurger.png';
+import css from '../../texture/css.jpg';
+import react from '../../texture/react.jpg';
+import python from '../../texture/python.jpg';
 
 
 export const underwaterUniforms = {
@@ -32,6 +35,24 @@ export const landaryUniforms = {
 
 export const crazyBurgerUniforms = {
     image: {type: 't', value: new THREE.TextureLoader().load(crazyBurger)},
+    time: {type: 'f', value: 0},
+    hover: {type: 'f', value: 0}
+}
+
+export const cssUniforms = {
+    image: {type: 't', value: new THREE.TextureLoader().load(css)},
+    time: {type: 'f', value: 0},
+    hover: {type: 'f', value: 0}
+}
+
+export const reactUniforms = {
+    image: {type: 't', value: new THREE.TextureLoader().load(react)},
+    time: {type: 'f', value: 0},
+    hover: {type: 'f', value: 0}
+}
+
+export const pythonUniforms = {
+    image: {type: 't', value: new THREE.TextureLoader().load(python)},
     time: {type: 'f', value: 0},
     hover: {type: 'f', value: 0}
 }

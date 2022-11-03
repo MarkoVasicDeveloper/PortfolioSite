@@ -6,13 +6,10 @@ import { text, textPosition, textRotation } from '../config/technologyText';
 import font from '../../static/font.json';
 
 const loader = new FontLoader();
-const ttfLoader = new TTFLoader();
 
 export function technologyText(scene) {
 	text.forEach((technology, index) => {
 		loader.load(font, (font) => {
-			// const redyFont = loader.parse(json);
-
 			const textGeometry = new TextGeometry(technology, {
 		        height: 0.01,
 		        size: 0.5,

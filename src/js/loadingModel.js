@@ -1,6 +1,5 @@
 import  * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import jsLogoCube from '../../static/jsLogoCube.glb';
 import jsLogo from '../../static/jsLogo.glb';
 import manModel from '../../static/businesModel.glb';
@@ -9,17 +8,14 @@ import { matrixFragment } from '../shader/fragment/matrix';
 import { matrixUniforms } from '../shader/uniforms/uniforms';
 
 const loader = new GLTFLoader();
-// const dracoLoader = new DRACOLoader();
-// dracoLoader.setDecoderPath( './static/manModel.glb' );
-// loader.setDRACOLoader( dracoLoader );
 const models = [ jsLogoCube, jsLogo];
 const modelsPosition = [ new THREE.Vector3(125, 0, 10), 
 						new THREE.Vector3(115, 1, 14)
 						];
 
 const modelsScale = [ new THREE.Vector3(20,20,20),
-					  new THREE.Vector3(5,5,5)					  ];
-const modelsRotation = [ Math.PI / 1.5, Math.PI / 1.5 ]
+					  new THREE.Vector3(5,5,5)];
+const modelsRotation = [ Math.PI / 1.5, Math.PI / 1.5 ];
 
 export function loadingModel(scene) {
 
@@ -35,7 +31,6 @@ export function loadingModel(scene) {
 
 export function dracoModel (scene) {
 	loader.load(manModel, (draco) => {
-		console.log(draco)
 		draco.scene.position.set(96, 0, 60);
 		draco.scene.scale.set(2,2,2);
 		draco.scene.rotation.y = Math.PI / 2;
