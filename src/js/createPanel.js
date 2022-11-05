@@ -69,6 +69,7 @@ export function createPanel() {
         lineMesh.add(sphereMesh);
 
         myPanelGroup.add(mesh, lineMesh);
+        myPanelGroup.name = 'panel';
 
         myPanelGroup.position.set(-5, 4, -10);
 

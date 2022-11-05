@@ -20,6 +20,8 @@ export function technologyText(scene) {
 	    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
 	    textMesh.position.set(...textPosition[index]);
 	    textMesh.rotation.y = textRotation[index];
+	    textMesh.name = 'technologyText';
+	    textMesh.scale.set(0,0,0);
 	    scene.add(textMesh);
 	})
 	})

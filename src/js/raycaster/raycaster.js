@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { planeUniforms, washerUniforms, landaryUniforms, crazyBurgerUniforms, cssUniforms, reactUniforms, pythonUniforms } from '../../shader/uniforms/uniforms';
 import gsap from 'gsap';
 import { cameraLookAt } from '../moveCamera';
+import clickWav from '../../../static/click.wav';
+
+const clickAudio = new Audio(clickWav);
 
 export const pointer = new THREE.Vector2();
 
@@ -85,6 +88,7 @@ export function raycasterClick(camera, scene) {
 	const intersects = raycasterInstance.intersectObjects( scene.children );
 
 	if(intersects.length > 0 && intersects[ 0 ].object.name === 'link') {
+		clickAudio.play();
 		window.open(intersects[ 0 ].object.userData.link, '_blank')
 	}
 }

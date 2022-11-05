@@ -9,6 +9,7 @@ const loader = new TTFLoader();
 const fontLoader = new FontLoader();
 
 export function addTitle(scene) {
+	
 	titleText.forEach((title, index) => {
 			loader.load(loadedFont, (json) => {
 				const font = fontLoader.parse(json);
@@ -22,6 +23,8 @@ export function addTitle(scene) {
 		    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
 		    textMesh.position.set(...titlePosition[index]);
 		    textMesh.rotation.y = titleRotation[index];
+		    textMesh.name = 'title';
+		    textMesh.scale.set(0,0,0);
 		    scene.add(textMesh);
 		})
 	})
