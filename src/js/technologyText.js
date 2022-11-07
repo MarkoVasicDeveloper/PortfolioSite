@@ -1,11 +1,8 @@
 import * as THREE from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader';
 import { text, textPosition, textRotation } from '../config/technologyText';
 import font from '../../static/font.json';
-
-const loader = new FontLoader();
+import { loader } from './main.js';
 
 export function technologyText(scene) {
 	text.forEach((technology, index) => {

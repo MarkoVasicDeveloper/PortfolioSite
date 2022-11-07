@@ -25,7 +25,7 @@ export const titleText = [
 ];
 
 export const titlePosition = [
-	new THREE.Vector3(40,4,-30),
+	new THREE.Vector3(35,4,-30),
 	new THREE.Vector3(120, 4, -28),
 	new THREE.Vector3(110, 1, 50),
 	new THREE.Vector3(94, 1, 44)

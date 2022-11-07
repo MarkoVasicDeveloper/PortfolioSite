@@ -1,18 +1,14 @@
 import * as THREE from 'three';
-import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { titleText, titlePosition, titleRotation, titleSize } from '../config/text';
 import loadedFont from '../../static/PermanentMarker-Regular.ttf';
-
-const loader = new TTFLoader();
-const fontLoader = new FontLoader();
+import { ttfLoader, loader } from './main.js';
 
 export function addTitle(scene) {
 	
 	titleText.forEach((title, index) => {
-			loader.load(loadedFont, (json) => {
-				const font = fontLoader.parse(json);
+			ttfLoader.load(loadedFont, (json) => {
+				const font = loader.parse(json);
 				const textGeometry = new TextGeometry(title, {
 		        height: 0.01,
 		        size: titleSize[index],

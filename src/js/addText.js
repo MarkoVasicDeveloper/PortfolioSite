@@ -1,14 +1,10 @@
 import * as THREE from 'three';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import loadedFont from '/static/font.json';
 import { panelText } from '../config/text';
 import linkedinModel from '/static/linkedin.glb';
 import {httpLink, planeModels, scaleModels, modelsPosition, modelsRotation} from '../config/link';
-
-const loader = new FontLoader();
-const modelLoader = new GLTFLoader();
+import { modelLoader, loader } from './main.js';
 
 export default function addText (panelArray) {
 

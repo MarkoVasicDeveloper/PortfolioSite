@@ -36,7 +36,7 @@ used it in the field of cyber security,
 for writing scripts. Also, I've dealt with
 networks, protocols, layers... Linux is
 the standard in cyber security, so the
-terminal is an old friend of me!
+terminal is an old friend for me!
 `
 ];
 
@@ -55,5 +55,3 @@ export const textRotation = [
 	Math.PI / 2.8,
 	Math.PI / 5.2
 ];
-
-// As a backend language, I used Node.js and Nest.js framework. I worked with JWT token, middleware, user authentication and authorization, file upload and download, socket.io, file manipulation...

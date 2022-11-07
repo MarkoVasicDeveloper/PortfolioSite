@@ -1,18 +1,15 @@
 import * as THREE from 'three';
-import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import font from '../../static/JustAnotherHand-Regular.ttf';
 import { underwaterFragment } from '../shader/fragment/underwater';
 import { underwaterVertex } from '../shader/vertex/underwater';
 import { underwaterUniforms } from '../shader/uniforms/uniforms';
-
-const loader = new TTFLoader();
+import { ttfLoader, loader } from './main.js';
 
 export function myName(scene) {
 
-	loader.load(font, (json) => {
-		const readyFont = new FontLoader().parse(json);
+	ttfLoader.load(font, (json) => {
+		const readyFont = loader.parse(json);
 
 		const geometry = new TextGeometry('Marko Vasic', {
 			font: readyFont,

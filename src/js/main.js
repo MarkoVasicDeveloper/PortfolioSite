@@ -20,6 +20,66 @@ import { loadingModel, dracoModel } from './loadingModel';
 import { technologyText } from './technologyText';
 import { distanceOfCamera } from './distanceOfCamera';
 import backgroundMusic from '../../static/background.mp3';
+import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import mute from '../../static/mute.png';
+import play from '../../static/volume.png';
+
+const backAudio = new Audio(backgroundMusic);
+backAudio.volume = 0.2;
+backAudio.loop = true;
+
+const loadingManager = new THREE.LoadingManager();
+
+export const ttfLoader = new TTFLoader(loadingManager);
+export const loader = new FontLoader(loadingManager);
+export const modelLoader = new GLTFLoader(loadingManager);
+
+const progressBar = document.getElementById('progressBar');
+const label = document.querySelector('label');
+const enterButton = document.getElementById('enter');
+const loadingContent = document.querySelector('.loadingContent');
+const info = document.querySelector('.info');
+const logo = document.querySelector('svg text');
+
+let strokeOfset = 2550;
+
+loadingManager.onProgress = function(url, loaded, total) {
+    progressBar.value = (loaded / total) * 100;
+    strokeOfset -= ((loaded / total) * 100 * 4);
+    if(strokeOfset < 0) strokeOfset = 0;
+    logo.style.strokeDashoffset = strokeOfset;
+}
+
+loadingManager.onLoad = function(url, loaded, total) {
+    enterButton.classList.remove('hidden');
+    progressBar.classList.add('hidden');
+    label.innerText = 'Ready!';
+}
+
+enterButton.onclick = () => {
+    backAudio.play();
+    loadingContent.style.display = 'none';
+    info.classList.remove('hidden');
+    distanceOfCamera(camera,objectArray, scene);
+    window.addEventListener('wheel', (e) => {moveCamera(e, camera, points); distanceOfCamera(camera,objectArray, scene)});
+}
+
+let pausedMusic = false;
+
+info.onclick = () => {
+    const img = document.querySelector('.info img');
+    if(!pausedMusic) {
+        backAudio.pause();
+        img.src = mute;
+        pausedMusic = true;
+        return;
+    }
+    img.src = play;
+    backAudio.play();
+    pausedMusic = false;
+}
 
 const time = new THREE.Clock();
 
@@ -56,7 +116,7 @@ cssPanel.rotation.y = -Math.PI / 0.75;
 cssPanel.position.set(72, 3, 71);
 cssPanel.scale.set(0,0,0);
 
-const pythonPanel = clonePanel(myPanel.clone(), 'https://www.w3schools.com/css/', pythonUniforms, 'technology' );
+const pythonPanel = clonePanel(myPanel.clone(), 'https://www.python.org/', pythonUniforms, 'technology' );
 pythonPanel.rotation.y = -Math.PI / 0.6;
 pythonPanel.position.set(4, 3, 42);
 
@@ -77,16 +137,8 @@ const objectArray = [myPanel, washerPanel, landaryPanel, crazyBurgerPanel, cssPa
 scene.add(roadObject, myPanel, washerPanel, landaryPanel, sphere, crazyBurgerPanel, reactPanel, cssPanel, pythonPanel);
 
 window.addEventListener('resize', () => onResize(camera, renderer));
-window.addEventListener('wheel', (e) => {moveCamera(e, camera, points); distanceOfCamera(camera,objectArray, scene)});
 window.addEventListener('pointermove', (e) => raycasterHover(e, camera, scene));
 window.addEventListener('click', (e) => raycasterClick(camera, scene));
-window.addEventListener('load', () => {
-    distanceOfCamera(camera,objectArray, scene);
-    const backAudio = new Audio(backgroundMusic);
-    backAudio.volume = 0.2;
-    backAudio.loop = true;
-    backAudio.play();
-});
 
 addTitle(scene);
 myName(scene);
@@ -141,7 +193,6 @@ function animation() {
     
     myPanel.children[0].geometry.attributes.position.needsUpdate = true;
 
-    // camera.updateProjectionMatrix();
     renderer.clear();
     renderer.render(bgScene, bgCamera);
     renderer.render(scene, camera);
