@@ -1,10 +1,13 @@
 {
+  "homepage": "http://MarkoVasicDeveloper.github.io/PortfolioSite",
   "name": "portfolio---parcel",
   "version": "1.0.0",
   "description": "Portfolio site in THREE.js",
   "main": "index.js",
   "scripts": {
     "start": "parcel src/index.html",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "prod": "parcel build src/index.html"
   },
   "author": "Marko Vasic",
@@ -17,6 +20,7 @@
   },
   "devDependencies": {
     "buffer": "^6.0.3",
+    "gh-pages": "^4.0.0",
     "parcel-reporter-static-files-copy": "^1.4.0"
   }
 }

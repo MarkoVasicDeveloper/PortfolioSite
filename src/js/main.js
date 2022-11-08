@@ -128,6 +128,9 @@ const reactPanelRing = reactPanel.children[1].children[0].children[0];
 const cssPanelRing = cssPanel.children[1].children[0].children[0];
 const pythonPanelRing = pythonPanel.children[1].children[0].children[0];
 
+const ringArray = [washerRing, ring, landaryRing, crazyBurgerRing, reactPanelRing, cssPanelRing, pythonPanelRing];
+const uniformsArray = [underwaterUniforms, planeUniforms, washerUniforms, landaryUniforms, lightUniforms, crazyBurgerUniforms, fogUniforms, matrixUniforms, cssUniforms, reactUniforms, pythonUniforms];
+
 addText([myPanel, washerPanel, landaryPanel, crazyBurgerPanel, cssPanel, reactPanel, pythonPanel]);
 
 const { camera, scene, bgCamera, bgScene, renderer } = stage();
@@ -156,28 +159,16 @@ const vertex = new THREE.Vector3();
 let frame = 1;
 
 function animation() {
-    underwaterUniforms.time.value = time.getElapsedTime();
-    planeUniforms.time.value = time.getElapsedTime();
-    washerUniforms.time.value = time.getElapsedTime();
-    landaryUniforms.time.value = time.getElapsedTime();
-    lightUniforms.time.value = time.getElapsedTime();
-    crazyBurgerUniforms.time.value = time.getElapsedTime();
-    fogUniforms.time.value = time.getElapsedTime();
-    matrixUniforms.time.value = time.getElapsedTime();
-    cssUniforms.time.value = time.getElapsedTime();
-    reactUniforms.time.value = time.getElapsedTime();
-    pythonUniforms.time.value = time.getElapsedTime();
+    for(let i = 0; i < uniformsArray.length; i++) {
+        uniformsArray[i].time.value = time.getElapsedTime();
+    }
 
     sphere.children[0].rotateY(0.2);
     sphere.rotateX(0.05)
     
-    ring.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
-    washerRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
-    landaryRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
-    crazyBurgerRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
-    reactPanelRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
-    cssPanelRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
-    pythonPanelRing.scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
+    for(let i = 0; i < ringArray.length; i++) {
+        ringArray[i].scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
+    }
 
     frame += 0.07;
 

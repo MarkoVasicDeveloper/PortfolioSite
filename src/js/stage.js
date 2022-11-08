@@ -1,8 +1,5 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import {underwaterFragment} from '../shader/fragment/underwater.js';
-import { underwaterUniforms, fogUniforms } from '../shader/uniforms/uniforms';
-import {underwaterVertex} from '../shader/vertex/underwater.js';
+import { fogUniforms } from '../shader/uniforms/uniforms';
 import { fogVertex } from '../shader/vertex/fog';
 import { fogFragment } from '../shader/fragment/fog';
 
@@ -14,12 +11,9 @@ export function stage () {
     const bgScene = new THREE.Scene();
     const bgCamera = new THREE.Camera();
 
-    // controls = new OrbitControls( camera, renderer.domElement );
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     camera.position.set(0, 3, 0);
-    // camera.lookAt(0, 2, -5);
-    // controls.update();
 
     const ambientalLight = new THREE.AmbientLight(0xffffff, 1);
 
@@ -40,7 +34,6 @@ export function stage () {
     bgScene.add(bgMesh);
 
     renderer.autoClear = false;
-    // renderer.shadowMap = true;
     renderer.setClearColor(new THREE.Color('#111111'))
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     document.body.appendChild(renderer.domElement);

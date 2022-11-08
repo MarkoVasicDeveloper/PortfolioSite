@@ -62,24 +62,6 @@ export function raycasterHover(event, camera, scene) {
 		gsap.to(reactUniforms.hover, {value: 0, duration: 1});
 		gsap.to(pythonUniforms.hover, {value: 0, duration: 1});
 	}
-
-	if(intersects.length > 0 && intersects[ 0 ].object.name === 'electric'){
-		// intersects[ 0 ].object.material.wireframe = true;
-			// function shake () {
-		// 	camera.lookAt(cameraLookAt[0], Math.random() / 100 + cameraLookAt[1],cameraLookAt[2]);
-		// 	console.log('shake');
-		// }
-		// shakeInteraval = setInterval(function(){
-		// 	camera.lookAt(cameraLookAt[0], Math.random() / 100 + cameraLookAt[1],cameraLookAt[2])}
-		// 	, 20);
-		// shakeInteraval = setInterval(() => shake(), 20);	}else {
-		// clearInterval(shakeInteraval);
-		// window.clearInterval(window.shakeInteraval);
-		// if(window.shakeInteraval != undefined && window.shakeInteraval != 'undefined'){
-		//     window.clearInterval(window.shakeInteraval);
-		//     console.log(window.shakeInteraval);
-		// }
-	}
 }
 
 export function raycasterClick(camera, scene) {
