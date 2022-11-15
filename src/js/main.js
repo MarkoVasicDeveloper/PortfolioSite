@@ -7,13 +7,8 @@ import { path } from './path.js';
 import { moveCamera } from './moveCamera';
 import { createPanel, clonePanel } from './createPanel';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import loadedFont from '/static/font.json';
 import addText from './addText';
 import { raycasterHover, raycasterClick } from './raycaster/raycaster';
-import { pointer } from './raycaster/raycaster';
-import washerPng from '../texture/washer.png';
-import { sphereGroup } from './sphereGroup';
 import { addTitle } from './addTitle';
 import { myName } from './myName';
 import { loadingModel, dracoModel } from './loadingModel';
@@ -25,6 +20,8 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import mute from '../../static/mute.png';
 import play from '../../static/volume.png';
+import { myAnimatedModel, mixer } from './myASnimatedModel';
+import myModel from '../../static/untitled.glb';
 
 const backAudio = new Audio(backgroundMusic);
 backAudio.volume = 0.2;
@@ -87,8 +84,6 @@ const roadObject = road();
 
 const points = path();
 
-const sphere = sphereGroup();
-
 const myPanel = createPanel();
 myPanel.scale.set(0,0,0);
 
@@ -137,7 +132,7 @@ const { camera, scene, bgCamera, bgScene, renderer } = stage();
 
 const objectArray = [myPanel, washerPanel, landaryPanel, crazyBurgerPanel, cssPanel, reactPanel, pythonPanel];
 
-scene.add(roadObject, myPanel, washerPanel, landaryPanel, sphere, crazyBurgerPanel, reactPanel, cssPanel, pythonPanel);
+scene.add(roadObject, myPanel, washerPanel, landaryPanel, crazyBurgerPanel, reactPanel, cssPanel, pythonPanel);
 
 window.addEventListener('resize', () => onResize(camera, renderer));
 window.addEventListener('pointermove', (e) => raycasterHover(e, camera, scene));
@@ -148,6 +143,7 @@ myName(scene);
 loadingModel(scene);
 technologyText(scene);
 dracoModel(scene);
+myAnimatedModel(myModel, scene);
 
 const position = myPanel.children[0].geometry.attributes.position.array;
 
@@ -157,14 +153,13 @@ const positionAttribute = geometry.getAttribute( 'position' );
 const vertex = new THREE.Vector3();
 
 let frame = 1;
-
+console.log(mixer)
 function animation() {
+    if(mixer) mixer.update(time.getDelta())
+    
     for(let i = 0; i < uniformsArray.length; i++) {
         uniformsArray[i].time.value = time.getElapsedTime();
     }
-
-    sphere.children[0].rotateY(0.2);
-    sphere.rotateX(0.05)
     
     for(let i = 0; i < ringArray.length; i++) {
         ringArray[i].scale.set(1 + Math.sin(frame) * 3, 1 + Math.sin(frame) * 3, 1);
