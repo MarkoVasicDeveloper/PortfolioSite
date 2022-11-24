@@ -18,10 +18,11 @@ import backgroundMusic from '../../static/background.mp3';
 import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import mute from '../../static/mute.png';
 import play from '../../static/volume.png';
 import { myAnimatedModel, mixer } from './myASnimatedModel';
-import myModel from '../../static/untitled.glb';
+import myModel from '../../static/myModel.fbx';
 
 const backAudio = new Audio(backgroundMusic);
 backAudio.volume = 0.2;
@@ -32,6 +33,7 @@ const loadingManager = new THREE.LoadingManager();
 export const ttfLoader = new TTFLoader(loadingManager);
 export const loader = new FontLoader(loadingManager);
 export const modelLoader = new GLTFLoader(loadingManager);
+export const fbxLoader = new FBXLoader(loadingManager);
 
 const progressBar = document.getElementById('progressBar');
 const label = document.querySelector('label');
@@ -55,12 +57,25 @@ loadingManager.onLoad = function(url, loaded, total) {
     label.innerText = 'Ready!';
 }
 
+function launchFullScreen(element) {
+    if(element.requestFullScreen) {
+      element.requestFullScreen();
+    } else if(element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if(element.webkitRequestFullScreen) {
+      element.webkitRequestFullScreen();
+    }
+  }
+
 enterButton.onclick = () => {
     backAudio.play();
     loadingContent.style.display = 'none';
     info.classList.remove('hidden');
     distanceOfCamera(camera,objectArray, scene);
     window.addEventListener('wheel', (e) => {moveCamera(e, camera, points); distanceOfCamera(camera,objectArray, scene)});
+
+    window.addEventListener('touchmove', (e) => {moveCamera(e, camera, points); distanceOfCamera(camera,objectArray, scene)});
+    if(window.innerHeight > window.innerWidth) launchFullScreen(document.documentElement);
 }
 
 let pausedMusic = false;

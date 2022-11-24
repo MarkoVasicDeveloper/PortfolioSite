@@ -3,11 +3,9 @@ import gsap from 'gsap';
 import particleFade from '../../static/particle-fade-in.wav';
 import textFade from '../../static/textFade.mp3';
 import { clips, mixer } from './myASnimatedModel';
-import welcome from '../../static/welcome.mp3';
 
 const audio = new Audio(particleFade);
 const textAudio = new Audio(textFade);
-const welcomeAudio = new Audio(welcome);
 
 export function distanceOfCamera (camera, objectArray, scene) {
 
@@ -46,22 +44,71 @@ export function distanceOfCamera (camera, objectArray, scene) {
 			if(dist < 15 && dist > 10) {
 				clips.forEach(cl => {
 					let action = mixer.clipAction(cl);
+					action.setLoop(THREE.LoopOnce);
+					action.clampWhenFinished = true;
+					action.enable = true;
 					action.stop();
 				})
-				const clip = THREE.AnimationClip.findByName(clips, 'arm_down_talking');
-				const clipHead = THREE.AnimationClip.findByName(clips, 'Wolf3D_HeadAction');
+				const clip = THREE.AnimationClip.findByName(clips, 'counting');
+				const clipDance = THREE.AnimationClip.findByName(clips, 'dancing');
+				const clipHipHop = THREE.AnimationClip.findByName(clips, 'hip_hop');
+				const clipGang = THREE.AnimationClip.findByName(clips, 'gamgan');
+				const clipHouseDancing = THREE.AnimationClip.findByName(clips, 'house_dancing');
+				const clipSoulDancing = THREE.AnimationClip.findByName(clips, 'soul_dancing');
+				const clipSoulDancing2 = THREE.AnimationClip.findByName(clips, 'soul_dancing_2');
+				const clipSpin = THREE.AnimationClip.findByName(clips, 'spin');
+				const clipIdle = THREE.AnimationClip.findByName(clips, 'idle');
+
         		const action = mixer.clipAction(clip);
-				const actionHead = mixer.clipAction(clipHead);
-				actionHead.setLoop(THREE.LoopOnce);
-				actionHead.clampWhenFinished = true;
-				actionHead.enable = true;
-				action.setLoop(THREE.LoopOnce);
-				action.clampWhenFinished = true;
-				action.enable = true;
+				const actionDance = mixer.clipAction(clipDance);
+				const actionHipHop = mixer.clipAction(clipHipHop);
+				const actionHouseDancing = mixer.clipAction(clipHouseDancing);
+				const actionSoulDancing = mixer.clipAction(clipSoulDancing);
+				const actionSoulDancing2 = mixer.clipAction(clipSoulDancing2);
+				const actionGang = mixer.clipAction(clipGang);
+				const actionSpin = mixer.clipAction(clipSpin);
+				const actionIdle = mixer.clipAction(clipIdle);
+				
 				action.play().reset();
-				actionHead.play().reset();
-				welcomeAudio.volume = 0.3;
-				welcomeAudio.play();
+
+				mixer.addEventListener('finished', (e) => {
+					clips.forEach(cl => {
+						let action = mixer.clipAction(cl);
+						action.stop();
+					})
+
+					switch (e.action._clip.name) {
+						case 'counting':
+							actionDance.play();
+							break;
+						case 'dancing':
+							actionHipHop.play();
+							break;
+						case 'hip_hop':
+							actionHouseDancing.play();
+							break;
+						case 'house_dancing':
+							actionSoulDancing.play();
+							break;
+						case 'soul_dancing':
+							actionSoulDancing2.play();
+							break;
+						case 'soul_dancing_2':
+							actionGang.play();
+							break;
+						case 'gamgan':
+							actionSpin.play();
+							break;
+						case 'spin':
+							actionIdle.play();
+							break;
+						case 'idle':
+							actionDance.play();
+							break;
+						default:
+							break;
+					}
+				})
 				child.userData.end = true;
 			}
 		}

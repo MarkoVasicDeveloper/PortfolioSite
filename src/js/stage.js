@@ -17,7 +17,7 @@ export function stage () {
 
     const ambientalLight = new THREE.AmbientLight(0xffffff, 1);
 
-    const directionalLight = new THREE.DirectionalLight('#ffffff', 2);
+    const directionalLight = new THREE.DirectionalLight('#ffffff', 0.2);
     directionalLight.position.set(2, 4, 1);
 
     const bgGeometry = new THREE.PlaneGeometry(2,2);
