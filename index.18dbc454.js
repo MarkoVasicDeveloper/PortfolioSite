@@ -34200,8 +34200,10 @@ function moveCamera(e, camera, points, toushStart = null) {
     }
     const position = points;
     if (counter === points.length - 2) counter = 0;
+    if (touch && counter === points.length - 4) counter = 0;
     if (counter < 0) return;
     if (e.deltaY > 0 || touch > 0) {
+        console.log(counter, points.length);
         camera.position.set(points[counter].x, 3, -points[counter].y);
         camera.lookAt(points[counter + 2].x, 3, -points[counter + 2].y);
         counter += 1;
