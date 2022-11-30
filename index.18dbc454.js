@@ -600,6 +600,11 @@ function launchFullScreen(element) {
     else if (element.webkitRequestFullScreen) element.webkitRequestFullScreen();
 }
 enterButton.onclick = ()=>{
+    if (window.innerHeight > window.innerWidth) {
+        launchFullScreen(document.documentElement);
+        const myScreenOrientation = window.screen.orientation;
+        myScreenOrientation.lock("landscape");
+    }
     backAudio.play();
     loadingContent.style.display = "none";
     info.classList.remove("hidden");
@@ -703,13 +708,6 @@ const objectArray = [
     pythonPanel
 ];
 scene.add(roadObject, myPanel, washerPanel, landaryPanel, crazyBurgerPanel, reactPanel, cssPanel, pythonPanel);
-window.addEventListener("loadstart", (e)=>{
-    if (window.innerHeight > window.innerWidth) {
-        launchFullScreen(document.documentElement);
-        const myScreenOrientation = window.screen.orientation;
-        myScreenOrientation.lock("landscape");
-    }
-});
 window.addEventListener("resize", ()=>(0, _onResize.onResize)(camera, renderer));
 window.addEventListener("pointermove", (e)=>(0, _raycaster.raycasterHover)(e, camera, scene));
 window.addEventListener("click", (e)=>(0, _raycaster.raycasterClick)(camera, scene));
@@ -723,7 +721,6 @@ const geometry = myPanel.children[0].geometry;
 const positionAttribute = geometry.getAttribute("position");
 const vertex = new _three.Vector3();
 let frame = 1;
-console.log((0, _myASnimatedModel.mixer));
 function animation() {
     if (0, _myASnimatedModel.mixer) (0, _myASnimatedModel.mixer).update(time.getDelta());
     for(let i = 0; i < uniformsArray.length; i++)uniformsArray[i].time.value = time.getElapsedTime();
@@ -744,7 +741,7 @@ function animation() {
 }
 animation();
 
-},{"three":"ktPTu","./stage":"g0zSj","./onResize":"4Qx25","../shader/uniforms/uniforms":"i8rAh","./road.js":"k8gDZ","./path.js":"4IrwC","./moveCamera":"dX6Fp","./createPanel":"aVo3F","three/examples/jsm/loaders/FontLoader":"h0CPK","./addText":"18COD","./raycaster/raycaster":"9ff4k","./addTitle":"bv2ka","./myName":"alidC","./loadingModel":"5tbEz","./technologyText":"a7TgQ","./distanceOfCamera":"lPHc9","../../static/background.mp3":"lGrVg","three/examples/jsm/loaders/TTFLoader":"hxGeK","three/examples/jsm/loaders/GLTFLoader":"dVRsF","three/examples/jsm/loaders/FBXLoader":"e0BdD","../../static/mute.png":"loyQE","../../static/volume.png":"5fkKx","./myASnimatedModel":"ay1KY","../../static/myModel.fbx":"7mVIY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ktPTu":[function(require,module,exports) {
+},{"three":"ktPTu","./stage":"g0zSj","./onResize":"4Qx25","../shader/uniforms/uniforms":"i8rAh","./road.js":"k8gDZ","./path.js":"4IrwC","./moveCamera":"dX6Fp","./createPanel":"aVo3F","three/examples/jsm/loaders/FontLoader":"h0CPK","./addText":"18COD","./raycaster/raycaster":"9ff4k","./addTitle":"bv2ka","./myName":"alidC","./loadingModel":"5tbEz","./technologyText":"a7TgQ","./distanceOfCamera":"lPHc9","../../static/background.mp3":"lGrVg","three/examples/jsm/loaders/TTFLoader":"hxGeK","three/examples/jsm/loaders/GLTFLoader":"dVRsF","three/examples/jsm/loaders/FBXLoader":"e0BdD","../../static/mute.png":"loyQE","../../static/volume.png":"5fkKx","./myASnimatedModel":"ay1KY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../static/myModel.fbx":"7mVIY"}],"ktPTu":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ACESFilmicToneMapping", ()=>ACESFilmicToneMapping);
@@ -34203,7 +34200,6 @@ function moveCamera(e, camera, points, toushStart = null) {
     if (touch && counter === points.length - 4) counter = 0;
     if (counter < 0) return;
     if (e.deltaY > 0 || touch > 0) {
-        console.log(counter, points.length);
         camera.position.set(points[counter].x, 3, -points[counter].y);
         camera.lookAt(points[counter + 2].x, 3, -points[counter + 2].y);
         counter += 1;
