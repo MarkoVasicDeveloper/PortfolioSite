@@ -1,0 +1,7 @@
+{
+  "extends": "@parcel/config-default",
+  "transformers": {
+    "*.{wav,mp3,glb,gltf,obj,ttf}": ["@parcel/transformer-raw"]
+  },
+  "reporters": ["...", "parcel-reporter-static-files-copy"]
+}
