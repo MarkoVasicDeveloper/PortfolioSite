@@ -5,11 +5,20 @@ import * as THREE from "three";
  * Acts as the bridge between the core logic and the Three.js rendering engine.
  */
 export class SceneManager {
+  /**
+   * @param {HTMLCanvasElement} canvas
+   */
   constructor(canvas) {
+    /** @type {HTMLCanvasElement} */
     this.canvas = canvas;
+
+    /** @type {THREE.Scene} */
     this.scene = new THREE.Scene();
 
+    /** @type {THREE.Scene} */
     this.bgScene = new THREE.Scene();
+
+    /** @type {THREE.Camera} */
     this.bgCamera = new THREE.Camera();
 
     this._setupRenderer();
