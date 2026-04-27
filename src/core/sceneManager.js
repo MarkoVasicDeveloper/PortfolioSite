@@ -111,8 +111,10 @@ export class SceneManager {
    * @param {Function} updateCallback - Function to execute every frame before rendering.
    */
   render(updateCallback) {
-    const tick = () => {
-      if (updateCallback) updateCallback();
+    const tick = (time) => {
+      const elapsedTime = time * 0.001;
+
+      if (updateCallback) updateCallback(elapsedTime);
 
       this.renderer.clear();
       this.renderer.render(this.bgScene, this.bgCamera);
