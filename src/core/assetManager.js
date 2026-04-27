@@ -2,31 +2,46 @@ import { AssetError } from "./errors/assetError";
 import { Logger } from "./logger";
 
 /**
+ * @typedef {Object} AssetConfigEntry
+ * @property {string} name - The unique identifier for the asset.
+ * @property {string} url - Path to the asset file.
+ */
+
+/**
+ * @typedef {Object} LoaderConfig
+ * @property {Object} loader - The specific loader instance (e.g., GLTFLoader).
+ * @property {Object} store - Reference to the internal store where the asset will be saved.
+ */
+
+/**
  * Orchestrates asset loading, storage, and retrieval.
  * Decoupled from specific rendering engines using Dependency Injection.
  * @extends EventTarget
  */
 export class AssetManager extends EventTarget {
   /**
-   *
-   * @param {Object} extensionMap - Maps file extensions to specific loaders.
+   * @param {Object.<string, LoaderConfig>} extensionMap - Maps file extensions to specific loaders and stores.
    */
   constructor(extensionMap = {}) {
     super();
-    /** @type {Object} */
+    /** * Internal storage for all loaded resources.
+     * @type {{models: Object, audio: Object, fonts: Object, textures: Object}}
+     */
     this.assets = {
       models: {},
       audio: {},
       fonts: {},
       textures: {},
     };
-    /** @type {Object} */
+    /** * @type {Object.<string, LoaderConfig>}
+     * @private
+     */
     this.extensionMap = extensionMap;
   }
 
   /**
-   * Injects the loader configuration.
-   * @param {Object} map - The extension to loader mapping.
+   * Injects or updates the loader configuration.
+   * @param {Object.<string, LoaderConfig>} map - The extension to loader mapping.
    */
   setExtensionMap(map) {
     this.extensionMap = map;
@@ -37,12 +52,18 @@ export class AssetManager extends EventTarget {
    * @param {Object} loadingManager - The manager instance (e.g., THREE.LoadingManager).
    */
   setupProgress(loadingManager) {
+    /**
+     * @param {string} _ - The URL of the asset (unused).
+     * @param {number} loaded - Number of assets loaded so far.
+     * @param {number} total - Total number of assets to be loaded.
+     */
     loadingManager.onProgress = (_, loaded, total) => {
       const progress = (loaded / total) * 100;
       /**
        * Fired when an asset progress updates.
        * @event AssetManager#assetProgress
-       * @type {CustomEvent<number>}
+       * @type {CustomEvent}
+       * @property {Object} detail - The progress percentage (0-100).
        */
       this.dispatchEvent(
         new CustomEvent("assetProgress", { detail: progress }),
@@ -97,8 +118,8 @@ export class AssetManager extends EventTarget {
 
   /**
    * Loads all provided asset configurations in parallel.
-   * @param {Object} assetsConfig - Configuration object containing arrays of assets.
-   * @returns {Promise<Array>} Resolved when all assets in config are loaded.
+   * @param {Object.<string, AssetConfigEntry[]>} assetsConfig - Config object containing arrays of assets.
+   * @returns {Promise<any[]>} Resolved when all assets in config are processed.
    */
   async allLoad(assetsConfig) {
     const allPromises = Object.values(assetsConfig)

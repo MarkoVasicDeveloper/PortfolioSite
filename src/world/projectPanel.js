@@ -1,24 +1,44 @@
 import * as THREE from "three";
 import { Logger } from "../core/logger";
 
+/**
+ * Shared geometry used by all ProjectPanels to reduce memory footprint.
+ * Includes a custom 'aRandom' attribute for vertex shader displacement.
+ * @type {THREE.PlaneGeometry}
+ */
 const SHARED_GEOMETRY = new THREE.PlaneGeometry(6, 4, 300, 200);
 const count = SHARED_GEOMETRY.attributes.position.count;
 const aRandom = new THREE.BufferAttribute(new Float32Array(count), 1);
-const aDirection = new THREE.BufferAttribute(new Float32Array(count), 1);
 
 for (let i = 0; i < count; i++) {
-  aRandom.setXYZ(i, Math.random() * 0.1 + 0.1);
-  aDirection.setXYZ(i, Math.random() > 0.5 ? 1 : -1);
+  aRandom.setX(i, Math.random() * 0.1 + 0.1);
 }
 
 SHARED_GEOMETRY.setAttribute("aRandom", aRandom);
-SHARED_GEOMETRY.setAttribute("aDirection", aDirection);
 
+/**
+ * Represents a decorative and interactive 3D panel for project display.
+ * Manages its own shader material, attachments (icons), and decorative elements.
+ * @extends THREE.Group
+ */
 export class ProjectPanel extends THREE.Group {
+  /**
+   * @param {import('../config/panels').PanelEntry} config - Configuration object for the panel.
+   * @param {Object} shaderData - Object containing vertex and fragment strings.
+   * @param {string} shaderData.vertex - Vertex shader code.
+   * @param {string} shaderData.fragment - Fragment shader code.
+   * @param {Object.<string, THREE.IUniform>} uniform - Three.js uniform object for ShaderMaterial.
+   * @param {import('../core/assetManager').AssetManager} assetManager - Instance to retrieve 3D models.
+   */
   constructor(config, shaderData, uniform, assetManager) {
     super();
+
+    /** @type {string} */
     this.name = `panel-${config.id}`;
 
+    /** * Animated ring mesh in the decoration group.
+     * @type {THREE.Mesh|null}
+     */
     this.ring = null;
 
     if (config.attachments && Array.isArray(config.attachments)) {
@@ -29,6 +49,12 @@ export class ProjectPanel extends THREE.Group {
     this._build(config, shaderData, uniform);
   }
 
+  /**
+   * Creates and positions a 3D attachment (icon) relative to the panel.
+   * @param {import('../config/panels').PanelAttachment} attachConfig - Attachment spatial and metadata.
+   * @param {import('../core/assetManager').AssetManager} assetManager - To retrieve the source model.
+   * @private
+   */
   _createAttachment(attachConfig, assetManager) {
     const asset = assetManager.models[attachConfig.modelName];
     if (!asset) {
@@ -58,6 +84,13 @@ export class ProjectPanel extends THREE.Group {
     this.add(model);
   }
 
+  /**
+   * Builds the main shader-based point cloud mesh.
+   * @param {import('../config/panels').PanelEntry} config - Panel metadata.
+   * @param {Object} shaderData - Shader source code.
+   * @param {Object} uniforms - Shader uniform values.
+   * @private
+   */
   _build(config, shaderData, uniforms) {
     const material = new THREE.ShaderMaterial({
       vertexShader: shaderData.vertex,
@@ -68,6 +101,9 @@ export class ProjectPanel extends THREE.Group {
       depthWrite: false,
     });
 
+    /** * The main visual representation using Three.js Points.
+     * @type {THREE.Points}
+     */
     const mesh = new THREE.Points(SHARED_GEOMETRY, material);
 
     mesh.name = "link";
@@ -78,6 +114,10 @@ export class ProjectPanel extends THREE.Group {
     this._createDecorations();
   }
 
+  /**
+   * Creates static decorative elements like the support line and landing sphere.
+   * @private
+   */
   _createDecorations() {
     const linePoints = [
       new THREE.Vector3(0, 1.5, 0),
@@ -103,6 +143,10 @@ export class ProjectPanel extends THREE.Group {
     this.add(lineMesh);
   }
 
+  /**
+   * Updates the panel animations per frame.
+   * @param {number} elapsedTime - Total time since the application started.
+   */
   update(elapsedTime) {
     if (this.ring) {
       const s = 1 + Math.sin(elapsedTime * 3) * 3;

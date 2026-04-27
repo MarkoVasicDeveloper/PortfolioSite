@@ -16,9 +16,14 @@ export class World {
    * @param {import('../core/assetManager').AssetManager} assetManager
    */
   constructor(sceneManager, assetManager) {
+    /** @type {import('../core/sceneManager').SceneManager} */
     this.sceneManager = sceneManager;
+    /** @type {import('../core/assetManager').AssetManager} */
     this.assetManager = assetManager;
 
+    /** * Collection of active ProjectPanel instances.
+     * @type {ProjectPanel[]}
+     */
     this.projectPanels = [];
 
     this._setupLights();
@@ -26,7 +31,9 @@ export class World {
     this._addProjectPanels();
   }
 
-  /** @private */
+  /** * Initializes ambient and directional lighting for the world.
+   * @private
+   */
   _setupLights() {
     const ambientalLight = new THREE.AmbientLight(0xffffff, 1);
 
@@ -37,7 +44,10 @@ export class World {
     this.sceneManager.add(directionalLight);
   }
 
-  /** @private */
+  /** * Iterates through ASSET_CONFIG to instantiate and position static 3D models.
+   * Applies custom shaders if specified in the configuration.
+   * @private
+   */
   _addStaticModels() {
     ASSET_CONFIG.models.forEach((config) => {
       const asset = this.assetManager.models[config.name];
@@ -69,7 +79,10 @@ export class World {
     });
   }
 
-  /** @private */
+  /** * Instantiates project panels based on PANEL_CONFIG.
+   * Maps loaded textures to shader uniforms and positions panels in space.
+   * @private
+   */
   _addProjectPanels() {
     PANEL_CONFIG.forEach((config) => {
       const shaderData = SHADER_REGISTRY[config.shaderKey];
@@ -94,6 +107,11 @@ export class World {
     });
   }
 
+  /**
+   * Main update loop for the world.
+   * Updates global shader uniforms (like time) and individual panel animations.
+   * @param {number} elapsedTime - Total time since application start.
+   */
   update(elapsedTime) {
     Object.values(SHADER_UNIFORMS).forEach((u) => {
       if (u.time) u.time.value = elapsedTime;

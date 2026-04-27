@@ -20,9 +20,9 @@
  * @property {string} name - Display name of the project
  * @property {string} link - Main project URL
  * @property {string} shaderKey - Key to identify the shader in SHADER_REGISTRY
- * * @property {string} uniforms - Key to identify the uniforms in SHADER_UNIFORMS
+ * @property {string} uniforms - Key to identify the uniforms in SHADER_UNIFORMS
  * @property {PanelTransform} transform - Spatial data for the panel
- * @property {PanelAttachment} [attachment] - Optional interactive icon attached to the panel
+ * @property {PanelAttachment[]} [attachments] - Optional interactive icon attached to the panel
  */
 
 /** @type {PanelEntry[]} */
