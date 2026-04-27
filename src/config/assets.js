@@ -20,6 +20,14 @@ import textFade from "url:../../static/textFade.mp3";
 import welcome from "url:../../static/welcome.mp3";
 import untitled from "url:../../static/untitled.glb";
 
+import main from "url:../texture/myPicture.jpg";
+import crazyBurger from "url:../texture/crazyBurger.png";
+import landary from "url:../texture/landary.jpg";
+import washer from "url:../texture/washer.png";
+import css from "url:../texture/css.jpg";
+import react from "url:../texture/react.jpg";
+import python from "url:../texture/python.jpg";
+
 /**
  * @typedef {Object} Transform
  * @property {number[]} [position] - [x, y, z] coordinates
@@ -32,6 +40,7 @@ import untitled from "url:../../static/untitled.glb";
  * @property {string} name - Unique identifier for the model
  * @property {string} url - Asset path/URL
  * @property {string} [shader] - Optional shader key from ShaderRegistry
+ * * @property {string} [uniforms] - Optional uniforms key from ShaderUniforms
  * @property {Transform} [transform] - Optional 3D transformations
  */
 
@@ -62,13 +71,14 @@ export const ASSET_CONFIG = {
       transform: {
         position: [125, 0, 10],
         scale: [20, 20, 20],
-        rotatetion: [Math.PI / 1.5, Math.PI / 1.5, 0],
+        rotation: [Math.PI / 1.5, Math.PI / 1.5, 0],
       },
     },
     {
       name: "matrixMan",
       url: matrixMan,
       shader: "matrix",
+      uniforms: "matrix",
       transform: {
         position: [96, 0, 60],
         scale: [2, 2, 2],
@@ -91,5 +101,14 @@ export const ASSET_CONFIG = {
     { name: "fontJustAnotherHand", url: fontJustAnotherHand },
     { name: "fontPremanentMarker", url: fontPremanentMarker },
     { name: "fontTitle", url: "/fonts/titleFont.json" },
+  ],
+  textures: [
+    { name: "main", url: main, shader: "plane", uniforms: "main" },
+    { name: "burger", url: crazyBurger, shader: "plane", uniforms: "burger" },
+    { name: "landary", url: landary, shader: "plane", uniforms: "landary" },
+    { name: "washer", url: washer, shader: "plane", uniforms: "washer" },
+    { name: "css", url: css, shader: "plane", uniforms: "css" },
+    { name: "react", url: react, shader: "plane", uniforms: "react" },
+    { name: "python", url: python, shader: "plane", uniforms: "python" },
   ],
 };

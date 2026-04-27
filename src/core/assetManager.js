@@ -18,6 +18,7 @@ export class AssetManager extends EventTarget {
       models: {},
       audio: {},
       fonts: {},
+      textures: {},
     };
     /** @type {Object} */
     this.extensionMap = extensionMap;
@@ -78,6 +79,9 @@ export class AssetManager extends EventTarget {
       loader.load(
         url,
         (result) => {
+          if (result.isTexture) {
+            result.colorSpace = "srgb";
+          }
           store[name] = result;
           resolve(result);
         },
@@ -134,5 +138,10 @@ export class AssetManager extends EventTarget {
   /** @returns {Object} Loaded audio buffers. */
   get audio() {
     return this.assets.audio;
+  }
+
+  /** @returns {Object} Loaded textures for shaders. */
+  get textures() {
+    return this.assets.textures;
   }
 }

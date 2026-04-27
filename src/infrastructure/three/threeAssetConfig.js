@@ -4,6 +4,7 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import { TextureLoader } from "three";
 
 /**
  * Factory function to create a loader map for Three.js.
@@ -20,6 +21,7 @@ export function createThreeExtensionMap(assetManagerInstance, loadingManager) {
   gltfLoader.setDRACOLoader(dracoLoader);
 
   const fontLoader = new FontLoader(loadingManager);
+  const textureLoader = new TextureLoader(loadingManager);
 
   /**
    * Wrapper for Audio loading to ensure it follows the standard (url, onLoad, onProgress, onError) signature.
@@ -76,6 +78,14 @@ export function createThreeExtensionMap(assetManagerInstance, loadingManager) {
     wav: {
       loader: audioLoaderWrapper,
       store: assetManagerInstance.assets.audio,
+    },
+    jpg: {
+      loader: textureLoader,
+      store: assetManagerInstance.assets.textures,
+    },
+    png: {
+      loader: textureLoader,
+      store: assetManagerInstance.assets.textures,
     },
   };
 }
