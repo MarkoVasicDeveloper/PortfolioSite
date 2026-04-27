@@ -27,7 +27,7 @@ export const SHADER_UNIFORMS = {
     distfading: { value: 0.2 },
   },
 
-  matrixUniforms: {
+  matrix: {
     color: { value: { r: 0, g: 0.70196, b: 0.14509 } },
     resolution: { value: { x: 1.9461, y: 1.9369 } },
     charSize: { value: { x: 0.8769, y: 0.9384 } },
@@ -36,10 +36,10 @@ export const SHADER_UNIFORMS = {
     time: { value: 0 },
   },
 
-  plane: createPanelUniforms(),
+  main: createPanelUniforms(),
   washer: createPanelUniforms(),
   landary: createPanelUniforms(),
-  crazyBurger: createPanelUniforms(),
+  burger: createPanelUniforms(),
   css: createPanelUniforms(),
   react: createPanelUniforms(),
   python: createPanelUniforms(),
