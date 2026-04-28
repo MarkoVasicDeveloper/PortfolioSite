@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 /**
  * Orchestrates the 3D scene, camera, and renderer.
@@ -53,11 +54,16 @@ export class SceneManager {
       55,
       window.innerWidth / window.innerHeight,
       0.1,
-      30,
+      500,
     );
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.camera.position.set(0, 3, 0);
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.05;
   }
 
   /**
@@ -112,6 +118,8 @@ export class SceneManager {
    */
   render(updateCallback) {
     const tick = (time) => {
+      if (this.controls) this.controls.update();
+
       const elapsedTime = time * 0.001;
 
       if (updateCallback) updateCallback(elapsedTime);

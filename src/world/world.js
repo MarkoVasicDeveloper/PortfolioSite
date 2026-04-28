@@ -4,6 +4,7 @@ import { SHADER_REGISTRY } from "../shader/shaderRegistry";
 import { SHADER_UNIFORMS } from "../shader/uniforms";
 import { ProjectPanel } from "./projectPanel";
 import { PANEL_CONFIG } from "../config/panels";
+import { Road } from "./road";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -25,6 +26,8 @@ export class World {
      * @type {ProjectPanel[]}
      */
     this.projectPanels = [];
+
+    this.road = new Road(this.sceneManager);
 
     this._setupLights();
     this._addStaticModels();
@@ -113,6 +116,8 @@ export class World {
    * @param {number} elapsedTime - Total time since application start.
    */
   update(elapsedTime) {
+    this.road.update(elapsedTime);
+
     Object.values(SHADER_UNIFORMS).forEach((u) => {
       if (u.time) u.time.value = elapsedTime;
     });
