@@ -51,11 +51,6 @@ import python from "url:../texture/python.jpg";
 export const ASSET_CONFIG = {
   models: [
     { name: "heroModel", url: myModel },
-    { name: "git", url: gitModel },
-    { name: "css", url: cssModel },
-    { name: "react", url: reactModel },
-    { name: "python", url: pythonModel },
-    { name: "linkedin", url: linkedin },
     {
       name: "jsLogo",
       url: jsLogo,
@@ -86,6 +81,13 @@ export const ASSET_CONFIG = {
       },
     },
     { name: "untitled", url: untitled },
+  ],
+  iconModels: [
+    { name: "git", url: gitModel },
+    { name: "css", url: cssModel },
+    { name: "react", url: reactModel },
+    { name: "python", url: pythonModel },
+    { name: "linkedin", url: linkedin },
   ],
   audio: [
     { name: "backgroundMusic", url: backgroundMusic },

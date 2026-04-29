@@ -34,7 +34,7 @@ export class ProjectPanel extends THREE.Group {
     super();
 
     /** @type {string} */
-    this.name = `panel-${config.id}`;
+    this.name = `panel-${config.name}`;
 
     /** * Animated ring mesh in the decoration group.
      * @type {THREE.Mesh|null}
@@ -56,7 +56,7 @@ export class ProjectPanel extends THREE.Group {
    * @private
    */
   _createAttachment(attachConfig, assetManager) {
-    const asset = assetManager.models[attachConfig.modelName];
+    const asset = assetManager.iconModels[attachConfig.modelName];
     if (!asset) {
       Logger.warn(
         "Project panel",
