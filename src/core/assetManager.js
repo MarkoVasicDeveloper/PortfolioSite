@@ -25,10 +25,11 @@ export class AssetManager extends EventTarget {
   constructor(extensionMap = {}) {
     super();
     /** * Internal storage for all loaded resources.
-     * @type {{models: Object, audio: Object, fonts: Object, textures: Object}}
+     * @type {{models: Object, iconModels: Object, audio: Object, fonts: Object, textures: Object}}
      */
     this.assets = {
       models: {},
+      iconModels: {},
       audio: {},
       fonts: {},
       textures: {},
@@ -122,26 +123,31 @@ export class AssetManager extends EventTarget {
    * @returns {Promise<any[]>} Resolved when all assets in config are processed.
    */
   async allLoad(assetsConfig) {
-    const allPromises = Object.values(assetsConfig)
-      .flat()
-      .map((asset) => {
-        const ext = asset.url.split("?")[0].split(".").pop().toLowerCase();
-        const config = this.extensionMap[ext];
+    const allPromises = Object.entries(assetsConfig).flatMap(
+      ([groupKey, assets]) => {
+        return assets.map((asset) => {
+          const ext = asset.url.split("?")[0].split(".").pop().toLowerCase();
+          const config = this.extensionMap[ext];
 
-        if (config)
-          return this._genericLoad(
-            config.loader,
-            asset.url,
-            asset.name,
-            config.store,
+          if (config) {
+            const targetStore = this.assets[groupKey] || config.store;
+
+            return this._genericLoad(
+              config.loader,
+              asset.url,
+              asset.name,
+              targetStore,
+            );
+          }
+
+          Logger.warn(
+            "AssetManager",
+            `Unsupported format .${ext} for "${asset.name}"`,
           );
-
-        Logger.warn(
-          "AssetManager",
-          `Unsupported format .${ext} for "${asset.name}"`,
-        );
-        return Promise.resolve(null);
-      });
+          return Promise.resolve(null);
+        });
+      },
+    );
 
     return Promise.all(allPromises);
   }
@@ -149,6 +155,11 @@ export class AssetManager extends EventTarget {
   /** @returns {Object} Loaded 3D models. */
   get models() {
     return this.assets.models;
+  }
+
+  /** @returns {Object} Loaded 3D iconModels. */
+  get iconModels() {
+    return this.assets.iconModels;
   }
 
   /** @returns {Object} Loaded font data. */
