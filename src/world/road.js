@@ -19,6 +19,7 @@ export class Road {
 
     this.progress = 0;
     this.materials = [];
+    this.points = [];
 
     this._createPath();
     this._createVisualRoad();
@@ -32,8 +33,6 @@ export class Road {
   _createPath() {
     let ax = 22.5;
     const radius = [22, 18, 22, 62];
-
-    this.points = [];
 
     for (let i = 0; i < 4; i++) {
       const curve = new THREE.EllipseCurve(

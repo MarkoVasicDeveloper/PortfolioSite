@@ -124,4 +124,9 @@ export class World {
 
     this.projectPanels.forEach((panel) => panel.update(elapsedTime));
   }
+
+  /** @returns {Array} Loaded points data. */
+  get points() {
+    return this.road.points;
+  }
 }
