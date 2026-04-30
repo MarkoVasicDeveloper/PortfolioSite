@@ -17,7 +17,6 @@ import clickWav from "url:../../static/click.wav";
 import particleInWav from "url:../../static/particle-fade-in.wav";
 import particleInWav2 from "url:../../static/particle-fade-in-2.wav";
 import textFade from "url:../../static/textFade.mp3";
-import welcome from "url:../../static/welcome.mp3";
 import untitled from "url:../../static/untitled.glb";
 
 import main from "url:../texture/myPicture.jpg";
@@ -95,7 +94,6 @@ export const ASSET_CONFIG = {
     { name: "particleIn", url: particleInWav },
     { name: "particleIn2", url: particleInWav2 },
     { name: "textFade", url: textFade },
-    { name: "welcome", url: welcome },
   ],
   fonts: [
     { name: "fontJson", url: "/fonts/font.json" },

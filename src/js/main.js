@@ -42,6 +42,7 @@ import { World } from "../world/world.js";
 import { SceneManager } from "../core/sceneManager.js";
 import { CameraController } from "../core/cameraController.js";
 import { InputManager } from "../core/inputManager.js";
+import { soundManager } from "../core/soundManager.js";
 
 const enterButton = document.getElementById("enter");
 const loadingContent = document.querySelector(".loadingContent");
@@ -63,6 +64,8 @@ const input = new InputManager();
 async function startApp() {
   try {
     await assetManager.allLoad(ASSET_CONFIG);
+    soundManager.setAudioAssets(assetManager.audio);
+    soundManager.startBackgroundMusic("backgroundMusic", 0.2);
 
     const world = new World(sceneManager, assetManager);
     const cameraController = new CameraController(
@@ -102,6 +105,7 @@ export const fbxLoader = new FBXLoader(loadingManager);
 // }
 
 enterButton.onclick = () => {
+  soundManager.unlock();
   // backAudio.play();
   loadingContent.style.display = "none";
   info.classList.remove("hidden");
