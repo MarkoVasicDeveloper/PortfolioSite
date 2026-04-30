@@ -43,7 +43,6 @@ export class CameraController {
   update(inputDelta) {
     if (!this.camera || !this.path) return;
     this.targetProgress += inputDelta * this.sensitivity;
-
     this.currentProgress = THREE.MathUtils.lerp(
       this.currentProgress,
       this.targetProgress,
@@ -55,9 +54,8 @@ export class CameraController {
     const position = this.path.getPointAt(normalizedProgress);
     this.camera.position.copy(position);
 
-    const tangent = this.path.getTangentAt(normalizedProgress);
-    this.lookTarget.copy(position).add(tangent);
-    this.camera.lookAt(this.lookTarget);
+    const lookAtTarget = this.path.getPointAt((normalizedProgress + 0.01) % 1);
+    this.camera.lookAt(lookAtTarget);
   }
 
   /**
