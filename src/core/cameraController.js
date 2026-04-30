@@ -2,7 +2,8 @@ import * as THREE from "three";
 
 /**
  * Advanced camera controller for smooth path-following.
- * Features infinite looping, look-ahead smoothing, and cross-platform input handling.
+ * Features infinite looping and look-ahead smoothing.
+ * Relies on external input delta (e.g., from an InputManager).
  */
 export class CameraController {
   /**
@@ -27,72 +28,21 @@ export class CameraController {
     this.lerpSpeed = 0.03;
     this.sensitivity = 0.0001;
 
-    /** * Smoothed look-at target to prevent jerky camera rotations.
+    /** * Pre-allocated vector for look-at calculations to optimize performance.
      * @type {THREE.Vector3}
+     * @private
      */
-    this.currentLookAt = new THREE.Vector3();
-
-    this.lastPointerY = 0;
-    this.isPointerDown = false;
-
-    this._onWheel = this._onWheel.bind(this);
-    this._onPointerDown = this._onPointerDown.bind(this);
-    this._onPointerMove = this._onPointerMove.bind(this);
-    this._onPointerUp = this._onPointerUp.bind(this);
-
-    this._setupEvents();
+    this.lookTarget = new THREE.Vector3();
   }
 
   /**
-   * Initializes event listeners for mouse and touch inputs.
-   * @private
+   * Updates camera position and orientation based on input delta.
+   * Should be called within the main animation loop.
+   * @param {number} inputDelta - Accumulated delta value from InputManager.
    */
-  _setupEvents() {
-    window.addEventListener("wheel", this._onWheel, { passive: true });
-    window.addEventListener("pointerdown", this._onPointerDown);
-    window.addEventListener("pointermove", this._onPointerMove);
-    window.addEventListener("pointerup", this._onPointerUp);
-  }
-
-  /** @private */
-  _onWheel(e) {
-    this._updateTarget(e.deltaY);
-  }
-
-  /** @private */
-  _onPointerDown(e) {
-    this.isPointerDown = true;
-    this.lastPointerY = e.clientY;
-  }
-
-  /** @private */
-  _onPointerMove(e) {
-    if (!this.isPointerDown) return;
-    const deltaY = (this.lastPointerY - e.clientY) * 1.8;
-    this._updateTarget(deltaY);
-    this.lastPointerY = e.clientY;
-  }
-
-  /** @private */
-  _onPointerUp() {
-    this.isPointerDown = false;
-  }
-
-  /**
-   * Updates the target progress based on input delta.
-   * @param {number} delta - The input change value.
-   * @private
-   */
-  _updateTarget(delta) {
-    this.targetProgress += delta * this.sensitivity;
-  }
-
-  /**
-   * Main update loop for camera positioning and orientation.
-   * Should be called within the requestAnimationFrame loop.
-   */
-  update() {
+  update(inputDelta) {
     if (!this.camera || !this.path) return;
+    this.targetProgress += inputDelta * this.sensitivity;
 
     this.currentProgress = THREE.MathUtils.lerp(
       this.currentProgress,
@@ -105,22 +55,15 @@ export class CameraController {
     const position = this.path.getPointAt(normalizedProgress);
     this.camera.position.copy(position);
 
-    const lookAtTarget = this.path.getPointAt((normalizedProgress + 0.02) % 1);
-
-    this.currentLookAt.lerp(lookAtTarget, 0.1);
-    this.camera.lookAt(this.currentLookAt);
+    const tangent = this.path.getTangentAt(normalizedProgress);
+    this.lookTarget.copy(position).add(tangent);
+    this.camera.lookAt(this.lookTarget);
   }
 
   /**
-   * Cleans up resources and removes global event listeners.
-   * Crucial for preventing memory leaks in Single Page Applications.
+   * Nullifies references for garbage collection.
    */
   dispose() {
-    window.removeEventListener("wheel", this._onWheel);
-    window.removeEventListener("pointerdown", this._onPointerDown);
-    window.removeEventListener("pointermove", this._onPointerMove);
-    window.removeEventListener("pointerup", this._onPointerUp);
-
     this.path = null;
     this.camera = null;
     this.currentLookAt = null;

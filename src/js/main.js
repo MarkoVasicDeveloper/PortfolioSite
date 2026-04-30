@@ -41,6 +41,7 @@ import { ASSET_CONFIG } from "../config/assets.js";
 import { World } from "../world/world.js";
 import { SceneManager } from "../core/sceneManager.js";
 import { CameraController } from "../core/cameraController.js";
+import { InputManager } from "../core/inputManager.js";
 
 const enterButton = document.getElementById("enter");
 const loadingContent = document.querySelector(".loadingContent");
@@ -57,6 +58,7 @@ new LoadingUI(assetManager);
 const mapExtension = createThreeExtensionMap(assetManager, loadingManager);
 assetManager.setExtensionMap(mapExtension);
 assetManager.setupProgress(loadingManager);
+const input = new InputManager();
 
 async function startApp() {
   try {
@@ -69,8 +71,9 @@ async function startApp() {
     );
 
     sceneManager.render((elapsedTime) => {
+      const delta = input.popDeltaY();
       if (world.update) world.update(elapsedTime);
-      cameraController.update();
+      cameraController.update(delta);
     });
   } catch (error) {
     console.error("Loading error:", error);
