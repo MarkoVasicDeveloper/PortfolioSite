@@ -14,8 +14,8 @@ import fontPremanentMarker from "url:../../static/PermanentMarker-Regular.ttf";
 
 import backgroundMusic from "url:../../static/background.mp3";
 import clickWav from "url:../../static/click.wav";
-import particleInWav from "url:../../static/particle-fade-in.wav";
-import particleInWav2 from "url:../../static/particle-fade-in-2.wav";
+import panelWav from "url:../../static/panel.wav";
+import titleWav from "url:../../static/title.wav";
 import textFade from "url:../../static/textFade.mp3";
 import untitled from "url:../../static/untitled.glb";
 
@@ -91,8 +91,8 @@ export const ASSET_CONFIG = {
   audio: [
     { name: "backgroundMusic", url: backgroundMusic },
     { name: "click", url: clickWav },
-    { name: "particleIn", url: particleInWav },
-    { name: "particleIn2", url: particleInWav2 },
+    { name: "panelWav", url: panelWav },
+    { name: "titleWav", url: titleWav },
     { name: "textFade", url: textFade },
   ],
   fonts: [
