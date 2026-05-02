@@ -1,31 +1,8 @@
 import * as THREE from "three";
-// import { stage } from "./stage";
-// import { onResize } from "./onResize";
-// import {
-//   underwaterUniforms,
-//   planeUniforms,
-//   washerUniforms,
-//   landaryUniforms,
-//   lightUniforms,
-//   crazyBurgerUniforms,
-//   fogUniforms,
-//   matrixUniforms,
-//   cssUniforms,
-//   reactUniforms,
-//   pythonUniforms,
-// } from "../shader/uniforms/uniforms";
-// // import { road } from "./road.js";
-// import { path } from "./path.js";
-// import { moveCamera } from "./moveCamera";
-// import { createPanel, clonePanel } from "./createPanel";
+
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
-// import addText from "./addText";
 // import { raycasterHover, raycasterClick } from "./raycaster/raycaster";
-// import { addTitle } from "./addTitle";
-// import { myName } from "./myName";
 // import { loadingModel, dracoModel } from "./loadingModel";
-// // import { technologyText } from "./technologyText";
-// import { distanceOfCamera } from "./distanceOfCamera";
 import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
@@ -93,10 +70,6 @@ async function startApp() {
 
 startApp();
 
-// const backAudio = new Audio(backgroundMusic);
-// backAudio.volume = 0.2;
-// backAudio.loop = true;
-
 export const ttfLoader = new TTFLoader(loadingManager);
 export const loader = new FontLoader(loadingManager);
 export const modelLoader = new GLTFLoader(loadingManager);
@@ -145,137 +118,6 @@ enterButton.onclick = () => {
 //   // backAudio.play();
 //   pausedMusic = false;
 // };
-
-// const time = new THREE.Clock();
-
-// const roadObject = road();
-
-// const points = path();
-
-// const myPanel = createPanel();
-// myPanel.scale.set(0, 0, 0);
-
-// const washerPanel = clonePanel(
-//   myPanel.clone(),
-//   "https://washersoftware.com",
-//   washerUniforms,
-//   "washer",
-// );
-// washerPanel.rotation.y = -Math.PI / 1.3;
-// washerPanel.position.set(52, 4, 0);
-// washerPanel.scale.set(0, 0, 0);
-
-// const landaryPanel = clonePanel(
-//   myPanel.clone(),
-//   "https://perionicavasic.rs",
-//   landaryUniforms,
-//   "landary",
-// );
-// landaryPanel.rotation.y = -Math.PI / 1.8;
-// landaryPanel.position.set(72, 4, 22);
-// landaryPanel.scale.set(0, 0, 0);
-
-// const crazyBurgerPanel = clonePanel(
-//   myPanel.clone(),
-//   "https://markovasicdeveloper.github.io/Crazy-Burger/",
-//   crazyBurgerUniforms,
-//   "burger",
-// );
-// crazyBurgerPanel.rotation.y = -Math.PI / 10;
-// crazyBurgerPanel.position.set(80, 4, -18);
-// crazyBurgerPanel.scale.set(0, 0, 0);
-
-// const reactPanel = clonePanel(
-//   myPanel.clone(),
-//   "https://reactjs.org",
-//   reactUniforms,
-//   "technology",
-// );
-// reactPanel.rotation.y = -Math.PI / 0.65;
-// reactPanel.position.set(34, 3, 65);
-
-// const cssPanel = clonePanel(
-//   myPanel.clone(),
-//   "https://www.w3schools.com/css/",
-//   cssUniforms,
-//   "technology",
-// );
-// cssPanel.rotation.y = -Math.PI / 0.75;
-// cssPanel.position.set(72, 3, 71);
-// cssPanel.scale.set(0, 0, 0);
-
-// const pythonPanel = clonePanel(
-//   myPanel.clone(),
-//   "https://www.python.org/",
-//   pythonUniforms,
-//   "technology",
-// );
-// pythonPanel.rotation.y = -Math.PI / 0.6;
-// pythonPanel.position.set(4, 3, 42);
-
-// const washerRing = washerPanel.children[1].children[0].children[0];
-// const ring = myPanel.children[1].children[0].children[0];
-// const landaryRing = landaryPanel.children[1].children[0].children[0];
-// const crazyBurgerRing = crazyBurgerPanel.children[1].children[0].children[0];
-// const reactPanelRing = reactPanel.children[1].children[0].children[0];
-// const cssPanelRing = cssPanel.children[1].children[0].children[0];
-// const pythonPanelRing = pythonPanel.children[1].children[0].children[0];
-
-// const ringArray = [
-//   washerRing,
-//   ring,
-//   landaryRing,
-//   crazyBurgerRing,
-//   reactPanelRing,
-//   cssPanelRing,
-//   pythonPanelRing,
-// ];
-// const uniformsArray = [
-//   underwaterUniforms,
-//   planeUniforms,
-//   washerUniforms,
-//   landaryUniforms,
-//   lightUniforms,
-//   crazyBurgerUniforms,
-//   fogUniforms,
-//   matrixUniforms,
-//   cssUniforms,
-//   reactUniforms,
-//   pythonUniforms,
-// ];
-
-// // addText([
-// //   myPanel,
-// //   washerPanel,
-// //   landaryPanel,
-// //   crazyBurgerPanel,
-// //   cssPanel,
-// //   reactPanel,
-// //   pythonPanel,
-// // ]);
-
-// const { camera, scene, bgCamera, bgScene, renderer } = stage();
-
-// const objectArray = [
-//   myPanel,
-//   washerPanel,
-//   landaryPanel,
-//   crazyBurgerPanel,
-//   cssPanel,
-//   reactPanel,
-//   pythonPanel,
-// ];
-
-// // scene.add(
-// //   roadObject,
-// //   myPanel,
-// //   washerPanel,
-// //   landaryPanel,
-// //   crazyBurgerPanel,
-// //   reactPanel,
-// //   cssPanel,
-// //   pythonPanel,
-// // );
 
 // window.addEventListener("resize", () => onResize(camera, renderer));
 // window.addEventListener("pointermove", (e) => raycasterHover(e, camera, scene));
