@@ -30,6 +30,7 @@ export const PANEL_CONFIG = [
   {
     id: "main",
     name: "Main Panel",
+    text: "Hi, I am Marko - \nFrontend developer!",
     link: "https://join.skype.com/invite/GC84cpUFYwdI",
     shaderKey: "plane",
     uniforms: "main",
@@ -56,6 +57,7 @@ export const PANEL_CONFIG = [
   {
     id: "washer",
     name: "Washer Software",
+    text: "Washer -\napp for carpet\nservices!",
     link: "https://washersoftware.com",
     shaderKey: "plane",
     uniforms: "washer",
@@ -76,6 +78,7 @@ export const PANEL_CONFIG = [
   {
     id: "landary",
     name: "Perionica Vasić",
+    text: "Landary service -\nsite for small\nbusines!",
     link: "https://perionicavasic.rs",
     shaderKey: "plane",
     uniforms: "landary",
@@ -96,6 +99,7 @@ export const PANEL_CONFIG = [
   {
     id: "burger",
     name: "Crazy Burger",
+    text: "Crazy Burger -\ntransform burger\nto drums!",
     link: "https://markovasicdeveloper.github.io/Crazy-Burger/",
     shaderKey: "plane",
     uniforms: "burger",
@@ -116,6 +120,7 @@ export const PANEL_CONFIG = [
   {
     id: "css",
     name: "CSS Learning",
+    text: "CSS!",
     link: "https://www.w3schools.com/css/",
     shaderKey: "plane",
     uniforms: "css",
@@ -137,13 +142,14 @@ export const PANEL_CONFIG = [
   {
     id: "react",
     name: "React Technology",
+    text: "React.js!",
     link: "https://reactjs.org",
     shaderKey: "plane",
     uniforms: "react",
     transform: {
       position: [34, 3, 65],
       rotation: [0, -Math.PI / 0.65, 0],
-      scale: [1, 1, 1],
+      scale: [0, 0, 0],
     },
     attachments: [
       {
@@ -158,13 +164,14 @@ export const PANEL_CONFIG = [
   {
     id: "python",
     name: "Python Logic",
+    text: "Python!",
     link: "https://www.python.org/",
     shaderKey: "plane",
     uniforms: "python",
     transform: {
       position: [4, 3, 42],
       rotation: [0, -Math.PI / 0.6, 0],
-      scale: [1, 1, 1],
+      scale: [0, 0, 0],
     },
     attachments: [
       {
