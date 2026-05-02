@@ -37,12 +37,13 @@ import { AssetManager } from "../core/assetManager";
 
 import { createThreeExtensionMap } from "../infrastructure/three/threeAssetConfig.js";
 import { LoadingUI } from "../infrastructure/ui/loadingUI.js";
-import { ASSET_CONFIG } from "../config/assets.js";
+import { ASSET_CONFIG, interactionConfigs } from "../config/configIndex.js";
 import { World } from "../world/world.js";
 import { SceneManager } from "../core/sceneManager.js";
 import { CameraController } from "../core/cameraController.js";
 import { InputManager } from "../core/inputManager.js";
 import { soundManager } from "../core/soundManager.js";
+import { InteractionManager } from "../core/interactionManager.js";
 
 const enterButton = document.getElementById("enter");
 const loadingContent = document.querySelector(".loadingContent");
@@ -73,10 +74,17 @@ async function startApp() {
       world.points,
     );
 
+    const interactionManager = new InteractionManager(
+      sceneManager.camera,
+      sceneManager.scene,
+      interactionConfigs,
+    );
+
     sceneManager.render((elapsedTime) => {
       const delta = input.popDeltaY();
       if (world.update) world.update(elapsedTime);
       cameraController.update(delta);
+      interactionManager.update();
     });
   } catch (error) {
     console.error("Loading error:", error);

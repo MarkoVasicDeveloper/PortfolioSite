@@ -3,7 +3,7 @@ import { ASSET_CONFIG } from "../config/assets";
 import { SHADER_REGISTRY } from "../shader/shaderRegistry";
 import { SHADER_UNIFORMS } from "../shader/uniforms";
 import { ProjectPanel } from "./projectPanel";
-import { PANEL_CONFIG } from "../config/panels";
+import { PANEL_CONFIG } from "../config/configIndex";
 import { Road } from "./road";
 
 /**
