@@ -3,8 +3,9 @@ import { ASSET_CONFIG } from "../config/assets";
 import { SHADER_REGISTRY } from "../shader/shaderRegistry";
 import { SHADER_UNIFORMS } from "../shader/uniforms";
 import { ProjectPanel } from "./projectPanel";
-import { PANEL_CONFIG } from "../config/configIndex";
+import { PANEL_CONFIG, TITLES_CONFIG } from "../config/configIndex";
 import { Road } from "./road";
+import { Title } from "./title";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -32,6 +33,7 @@ export class World {
     this._setupLights();
     this._addStaticModels();
     this._addProjectPanels();
+    this._addTitles();
   }
 
   /** * Initializes ambient and directional lighting for the world.
@@ -107,6 +109,24 @@ export class World {
 
       this.projectPanels.push(panel);
       this.sceneManager.add(panel);
+    });
+  }
+
+  /**
+   * Initializes and adds floating 3D titles to the scene based on the configuration.
+   * Iterates through the TITLES_CONFIG and creates a new Title instance for each entry,
+   * passing the pre-loaded Permanent Marker font from the AssetManager.
+   *
+   * @private
+   * @returns {void}
+   */
+  _addTitles() {
+    TITLES_CONFIG.forEach((config) => {
+      const title = new Title(
+        config,
+        this.assetManager.fonts.fontPremanentMarker,
+      );
+      this.sceneManager.add(title);
     });
   }
 
