@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Logger } from "../core/logger";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 
 /**
  * Shared geometry used by all ProjectPanels to reduce memory footprint.
@@ -41,12 +42,43 @@ export class ProjectPanel extends THREE.Group {
      */
     this.ring = null;
 
+    if (config.text) {
+      this._createText(config.text, assetManager.fonts.fontJson);
+    }
+
     if (config.attachments && Array.isArray(config.attachments)) {
       config.attachments.forEach((attachConfig) => {
         this._createAttachment(attachConfig, assetManager);
       });
     }
     this._build(config, shaderData, uniform);
+  }
+
+  /**
+   * Generates 3D text and adds it to the panel.
+   * @param {string} content - The text to display.
+   * @param {Object} font - The loaded Three.js font object.
+   * @private
+   */
+  _createText(content, font) {
+    if (!font) {
+      Logger.warn("ProjectPanel", "Font not loaded, skipping text creation.");
+      return;
+    }
+
+    const textGeometry = new TextGeometry(content, {
+      font: font,
+      size: 0.4,
+      height: 0.01,
+      curveSegments: 12,
+    });
+
+    const textMaterial = new THREE.MeshStandardMaterial({ color: "#525B68" });
+    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+    textMesh.position.x = 4;
+
+    this.add(textMesh);
   }
 
   /**
