@@ -110,6 +110,13 @@ export class ProjectPanel extends THREE.Group {
       model.rotation.set(rx, ry, rz);
     }
 
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.name = "attachment";
+        child.userData.link = attachConfig.link;
+      }
+    });
+
     model.userData.link = attachConfig.link;
     model.name = "attachment";
 

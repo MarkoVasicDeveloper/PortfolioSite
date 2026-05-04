@@ -21,6 +21,7 @@ import { CameraController } from "../core/cameraController.js";
 import { InputManager } from "../core/inputManager.js";
 import { soundManager } from "../core/soundManager.js";
 import { InteractionManager } from "../core/interactionManager.js";
+import { RaycasterManager } from "../core/raycasterManager.js";
 
 const enterButton = document.getElementById("enter");
 const loadingContent = document.querySelector(".loadingContent");
@@ -38,6 +39,7 @@ const mapExtension = createThreeExtensionMap(assetManager, loadingManager);
 assetManager.setExtensionMap(mapExtension);
 assetManager.setupProgress(loadingManager);
 const input = new InputManager();
+new RaycasterManager(sceneManager.camera, sceneManager.scene, assetManager);
 
 async function startApp() {
   try {
