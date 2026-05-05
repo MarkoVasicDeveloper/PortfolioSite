@@ -6,6 +6,8 @@ import { roadVertex } from "./vertex/road";
 import { roadFragment } from "./fragment/road";
 import { underwaterVertex } from "./vertex/underwater";
 import { underwaterFragment } from "./fragment/underwater";
+import { fogFragment } from "./fragment/fog";
+import { fogVertex } from "./vertex/fog";
 
 /** * @typedef {Object} ShaderEntry
  * @property {string} vertex - The vertex shader source code
@@ -29,5 +31,9 @@ export const SHADER_REGISTRY = {
   underwater: {
     vertex: underwaterVertex,
     fragment: underwaterFragment,
+  },
+  fog: {
+    vertex: fogVertex,
+    fragment: fogFragment,
   },
 };

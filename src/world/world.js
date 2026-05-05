@@ -11,6 +11,7 @@ import {
 import { Road } from "./road";
 import { TechText } from "./techText";
 import { Text3D } from "./text3d";
+import { Background } from "./background";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -49,6 +50,7 @@ export class World {
     this._addTitles();
     this._addTechTexts();
     this._addHeroText();
+    this._addBackground();
   }
 
   /** * Initializes ambient and directional lighting for the world.
@@ -180,6 +182,21 @@ export class World {
       },
     );
     this.sceneManager.add(heroText);
+  }
+
+  /**
+   * Initializes the background fog system and adds it to the persistent background scene.
+   * Uses a dedicated shader and uniforms to create a fullscreen visual effect.
+   *
+   * @private
+   * @returns {void}
+   */
+  _addBackground() {
+    this.fogBackground = new Background(
+      SHADER_REGISTRY.fog,
+      SHADER_UNIFORMS.fog,
+    );
+    this.sceneManager.addBackground(this.fogBackground);
   }
 
   /**
