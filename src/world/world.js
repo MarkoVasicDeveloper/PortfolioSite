@@ -9,8 +9,8 @@ import {
   TECH_TEXT_CONFIG,
 } from "../config/configIndex";
 import { Road } from "./road";
-import { Title } from "./title";
 import { TechText } from "./techText";
+import { Text3D } from "./text3d";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -35,11 +35,20 @@ export class World {
 
     this.road = new Road(this.sceneManager);
 
+    this._init();
+  }
+
+  /**
+   * Internal initialization sequence.
+   * @private
+   */
+  _init() {
     this._setupLights();
     this._addStaticModels();
     this._addProjectPanels();
     this._addTitles();
     this._addTechTexts();
+    this._addHeroText();
   }
 
   /** * Initializes ambient and directional lighting for the world.
@@ -128,9 +137,16 @@ export class World {
    */
   _addTitles() {
     TITLES_CONFIG.forEach((config) => {
-      const title = new Title(
-        config,
+      const title = new Text3D(
+        config.text,
         this.assetManager.fonts.fontPremanentMarker,
+        {
+          position: [...config.position],
+          rotationY: config.rotationY,
+          size: config.size,
+          scale: [0, 0, 0],
+          name: "title",
+        },
       );
       this.sceneManager.add(title);
     });
@@ -145,6 +161,25 @@ export class World {
       const techText = new TechText(config, this.assetManager.fonts.fontJson);
       this.sceneManager.add(techText);
     });
+  }
+
+  /**
+   * Creates the main "Hero" title with liquid shader effects.
+   * @private
+   */
+  _addHeroText() {
+    const heroText = new Text3D(
+      "Marko Vasic",
+      this.assetManager.fonts.fontJustAnotherHand,
+      {
+        size: 3.9,
+        position: [88, 1, 0],
+        rotationY: -Math.PI / 2,
+        shaderData: SHADER_REGISTRY.underwater,
+        uniforms: SHADER_UNIFORMS.underwater,
+      },
+    );
+    this.sceneManager.add(heroText);
   }
 
   /**
