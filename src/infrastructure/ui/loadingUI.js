@@ -1,15 +1,22 @@
 /**
  * Handles the visual representation of the asset loading process.
- * Manages DOM elements, progress bars, and SVG animations.
+ * Controls DOM elements, progress bars, and SVG logo animations.
+ *
+ * @class LoadingUI
  */
-
 export class LoadingUI {
   /**
-   * @param {EventTarget} assetManager - The manager to listen for loading events.
+   * Creates an instance of the LoadingUI class.
+   *
+   * @param {EventTarget} assetManager - The manager emitting loading events (assetProgress, assetLoaded).
+   * @param {Function} [onEnterCallback] - Optional callback function triggered when the user clicks the enter button.
    */
-  constructor(assetManager) {
+  constructor(assetManager, onEnterCallback) {
     /** @type {EventTarget} */
     this.assetManager = assetManager;
+
+    /** @type {Function|undefined} */
+    this.onEnterCallback = onEnterCallback;
 
     /** * Controller to manage and clean up event listeners.
      * @type {AbortController}
@@ -26,6 +33,10 @@ export class LoadingUI {
 
     /** @type {number} Total length of the SVG stroke for animation. */
     this.initialStrokeOffset = 2550;
+
+    if (this.elements.enterButton) {
+      this.elements.enterButton.onclick = () => this._handleEnter();
+    }
     this._initListeners();
   }
 
@@ -69,6 +80,17 @@ export class LoadingUI {
   }
 
   /**
+   * Internal handler for the Enter button click.
+   * Hides the UI, executes the callback, and cleans up resources.
+   * @private
+   */
+  _handleEnter() {
+    this.hide();
+    if (this.onEnterCallback) this.onEnterCallback();
+    this.cleanup();
+  }
+
+  /**
    * Transitions the UI to the "Ready" state and triggers cleanup.
    */
   finish() {
@@ -77,8 +99,14 @@ export class LoadingUI {
     enterButton?.classList.remove("hidden");
     progressBar?.classList.add("hidden");
     if (label) label.innerText = "Ready!";
+  }
 
-    this.cleanup();
+  /**
+   * Hides the main loading screen container.
+   */
+  hide() {
+    const container = document.querySelector(".loadingContent");
+    if (container) container.style.display = "none";
   }
 
   /**

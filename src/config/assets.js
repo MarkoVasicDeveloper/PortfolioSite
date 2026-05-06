@@ -17,7 +17,7 @@ import clickWav from "url:../../static/click.wav";
 import panelWav from "url:../../static/panel.wav";
 import titleWav from "url:../../static/title.wav";
 import textFade from "url:../../static/textFade.mp3";
-import untitled from "url:../../static/untitled.glb";
+// import untitled from "url:../../static/untitled.glb";
 
 import main from "url:../texture/myPicture.jpg";
 import crazyBurger from "url:../texture/crazyBurger.png";
@@ -49,14 +49,22 @@ import python from "url:../texture/python.jpg";
 
 export const ASSET_CONFIG = {
   models: [
-    { name: "heroModel", url: myModel },
+    {
+      name: "heroModel",
+      url: myModel,
+      transform: {
+        position: [15, 1, -25],
+        scale: [1.02, 1.02, 1.02],
+        rotation: [0, -Math.PI / 5, 0],
+      },
+    },
     {
       name: "jsLogo",
       url: jsLogo,
       transform: {
         position: [115, 1, 14],
         scale: [5, 5, 5],
-        rotation: [Math.PI / 1.5, Math.PI / 1.5, 0],
+        rotation: [0, Math.PI / 1.5, 0],
       },
     },
     {
@@ -65,7 +73,7 @@ export const ASSET_CONFIG = {
       transform: {
         position: [125, 0, 10],
         scale: [20, 20, 20],
-        rotation: [Math.PI / 1.5, Math.PI / 1.5, 0],
+        rotation: [0, Math.PI / 1.5, 0],
       },
     },
     {
@@ -79,7 +87,7 @@ export const ASSET_CONFIG = {
         rotation: [0, Math.PI / 2, 0],
       },
     },
-    { name: "untitled", url: untitled },
+    // { name: "untitled", url: untitled },
   ],
   iconModels: [
     { name: "git", url: gitModel },
