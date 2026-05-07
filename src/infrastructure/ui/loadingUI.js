@@ -71,7 +71,9 @@ export class LoadingUI {
   update(progress) {
     const { progressBar, logo } = this.elements;
 
-    if (progressBar) progressBar.value = progress;
+    if (progressBar) {
+      progressBar.value = progress;
+    }
     if (logo) {
       const currentOffset =
         this.initialStrokeOffset - this.initialStrokeOffset * (progress / 100);
@@ -86,7 +88,9 @@ export class LoadingUI {
    */
   _handleEnter() {
     this.hide();
-    if (this.onEnterCallback) this.onEnterCallback();
+    if (this.onEnterCallback) {
+      this.onEnterCallback();
+    }
     this.cleanup();
   }
 
@@ -98,7 +102,9 @@ export class LoadingUI {
 
     enterButton?.classList.remove("hidden");
     progressBar?.classList.add("hidden");
-    if (label) label.innerText = "Ready!";
+    if (label) {
+      label.innerText = "Ready!";
+    }
   }
 
   /**
@@ -106,7 +112,9 @@ export class LoadingUI {
    */
   hide() {
     const container = document.querySelector(".loadingContent");
-    if (container) container.style.display = "none";
+    if (container) {
+      container.style.display = "none";
+    }
   }
 
   /**

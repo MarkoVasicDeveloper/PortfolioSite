@@ -53,7 +53,7 @@ export class SceneManager {
       55,
       window.innerWidth / window.innerHeight,
       0.1,
-      30,
+      33,
     );
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
@@ -114,7 +114,9 @@ export class SceneManager {
     const tick = (time) => {
       const elapsedTime = time * 0.001;
 
-      if (updateCallback) updateCallback(elapsedTime);
+      if (updateCallback) {
+        updateCallback(elapsedTime);
+      }
 
       this.renderer.clear();
       this.renderer.render(this.bgScene, this.bgCamera);

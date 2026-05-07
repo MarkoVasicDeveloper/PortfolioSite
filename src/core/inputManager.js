@@ -66,7 +66,9 @@ export class InputManager {
    * @private
    */
   _onPointerMove(e) {
-    if (!this.isPointerDown) return;
+    if (!this.isPointerDown) {
+      return;
+    }
 
     // Invert the difference to make "swipe up" move the camera forward
     const diff = this.lastPointerY - e.clientY;

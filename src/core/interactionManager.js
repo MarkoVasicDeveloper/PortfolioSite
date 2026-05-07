@@ -1,5 +1,4 @@
 import gsap from "gsap";
-import { soundManager } from "./soundManager.js";
 
 /**
  * Manages spatial interactions between the camera and 3D objects.
@@ -10,14 +9,17 @@ export class InteractionManager {
    * @param {THREE.Camera} camera - The main scene camera to calculate distances from.
    * @param {THREE.Scene} scene - The Three.js scene containing interactive objects.
    * @param {Array<Object>} configs - Array of interaction configuration objects.
+   * @param {Object} soundManager - The audio service used to play interaction sounds.
    */
-  constructor(camera, scene, configs) {
+  constructor(camera, scene, configs, soundManager) {
     /** @type {THREE.Camera} */
     this.camera = camera;
     /** @type {THREE.Scene} */
     this.scene = scene;
     /** @type {Array<Object>} */
     this.configs = configs;
+    /** @type {Object} */
+    this.soundManager = soundManager;
 
     /**
      * Map to store grouped interactive objects for optimized iteration.
@@ -39,8 +41,9 @@ export class InteractionManager {
       const config = this.configs.find((c) => obj.name.includes(c.name));
 
       if (config) {
-        if (!this.interactiveGroups.has(config.name))
+        if (!this.interactiveGroups.has(config.name)) {
           this.interactiveGroups.set(config.name, []);
+        }
 
         obj.scale.set(0, 0, 0);
         obj.userData.isActive = false;
@@ -67,8 +70,9 @@ export class InteractionManager {
         const minRange = config.range.min || 0;
         const isInRange = distance <= maxRange && distance >= minRange;
 
-        if (isInRange !== mesh.userData.isActive)
+        if (isInRange !== mesh.userData.isActive) {
           this._handleStateChange(mesh, isInRange);
+        }
       });
     });
   }
@@ -85,7 +89,9 @@ export class InteractionManager {
 
     const targetScale = active ? 1 : 0;
 
-    if (active && config.sound) soundManager.play(config.sound, 0.4);
+    if (active && config.sound) {
+      this.soundManager.play(config.sound, 0.4);
+    }
 
     gsap.to(mesh.scale, {
       x: targetScale,

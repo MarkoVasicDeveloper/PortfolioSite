@@ -11,7 +11,9 @@ export class OrientationManager {
   static async handleMobileOrientation() {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    if (!isMobile) return;
+    if (!isMobile) {
+      return;
+    }
 
     try {
       const docElm = document.documentElement;

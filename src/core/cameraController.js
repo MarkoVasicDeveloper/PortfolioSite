@@ -41,7 +41,9 @@ export class CameraController {
    * @param {number} inputDelta - Accumulated delta value from InputManager.
    */
   update(inputDelta) {
-    if (!this.camera || !this.path) return;
+    if (!this.camera || !this.path) {
+      return;
+    }
     this.targetProgress += inputDelta * this.sensitivity;
     this.currentProgress = THREE.MathUtils.lerp(
       this.currentProgress,

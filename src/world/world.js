@@ -73,14 +73,22 @@ export class World {
   _addStaticModels() {
     ASSET_CONFIG.models.forEach((config) => {
       const asset = this.assetManager.models[config.name];
-      if (!asset) return;
+      if (!asset) {
+        return;
+      }
 
       const model = asset.scene || asset;
       if (config.transform) {
         const { position, scale, rotation } = config.transform;
-        if (position) model.position.set(...position);
-        if (scale) model.scale.set(...scale);
-        if (rotation) model.rotation.set(...rotation);
+        if (position) {
+          model.position.set(...position);
+        }
+        if (scale) {
+          model.scale.set(...scale);
+        }
+        if (rotation) {
+          model.rotation.set(...rotation);
+        }
       }
 
       if (config.shader && SHADER_UNIFORMS[config.uniforms]) {
@@ -111,7 +119,9 @@ export class World {
       const uniforms = SHADER_UNIFORMS[config.uniforms];
 
       const loadedTexture = this.assetManager.textures[config.id];
-      if (loadedTexture && uniforms.image) uniforms.image.value = loadedTexture;
+      if (loadedTexture && uniforms.image) {
+        uniforms.image.value = loadedTexture;
+      }
 
       const panel = new ProjectPanel(
         config,
@@ -208,7 +218,9 @@ export class World {
     this.road.update(elapsedTime);
 
     Object.values(SHADER_UNIFORMS).forEach((u) => {
-      if (u.time) u.time.value = elapsedTime;
+      if (u.time) {
+        u.time.value = elapsedTime;
+      }
     });
 
     this.projectPanels.forEach((panel) => panel.update(elapsedTime));
