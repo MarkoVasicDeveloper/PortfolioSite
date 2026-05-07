@@ -23,35 +23,59 @@ export class Text3D extends THREE.Mesh {
    * @param {Object} [options.uniforms={}] - Uniforms for ShaderMaterial.
    */
   constructor(content, font, options = {}) {
-    const geometry = new TextGeometry(content, {
+    const geometry = Text3D._createGeometry(content, font, options);
+    const material = Text3D._createMaterial(options);
+
+    super(geometry, material);
+
+    this._applyOptions(options);
+  }
+
+  /** @private */
+  static _createGeometry(content, font, options) {
+    return new TextGeometry(content, {
       font: font,
       size: options.size || 1,
       height: options.height || 0.01,
       curveSegments: 12,
     });
+  }
 
-    let material;
+  /** @private */
+  static _createMaterial(options) {
     if (options.shaderData) {
-      material = new THREE.ShaderMaterial({
+      return new THREE.ShaderMaterial({
         vertexShader: options.shaderData.vertex,
         fragmentShader: options.shaderData.fragment,
         uniforms: options.uniforms || {},
         transparent: true,
       });
-    } else {
-      material = new THREE.MeshStandardMaterial({
-        color: options.color || "#525B68",
-      });
     }
 
-    super(geometry, material);
+    return new THREE.MeshStandardMaterial({
+      color: options.color || "#525B68",
+    });
+  }
 
-    if (options.name) this.name = options.name;
+  /** @private */
+  _applyOptions(options) {
+    this.name = options.name || "Text3D";
 
-    if (options.position) this.position.set(...options.position);
-    if (options.rotationY !== undefined) this.rotation.y = options.rotationY;
+    if (options.name) {
+      this.name = options.name;
+    }
 
-    if (options.scale) this.scale.set(0, 0, 0);
+    if (options.position) {
+      this.position.set(...options.position);
+    }
+
+    if (options.rotationY !== undefined) {
+      this.rotation.y = options.rotationY;
+    }
+
+    if (options.scale) {
+      this.scale.set(0, 0, 0);
+    }
   }
 
   /**

@@ -192,4 +192,54 @@ export class ProjectPanel extends THREE.Group {
       this.ring.scale.set(s, s, 1);
     }
   }
+
+  /**
+   * Cleans up GPU assets to prevent memory leaks.
+   * Note: SHARED_GEOMETRY is not disposed here as it is shared across instances.
+   */
+  dispose() {
+    this.traverse((child) => {
+      if (child.isMesh || child.isPoints || child.isLine) {
+        if (child.geometry && child.geometry !== SHARED_GEOMETRY) {
+          child.geometry.dispose();
+        }
+
+        if (child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat) => this._disposeMaterial(mat));
+          } else {
+            this._disposeMaterial(child.material);
+          }
+        }
+      }
+    });
+
+    this.clear();
+
+    Logger.info("ProjectPanel", `${this.name} disposed.`);
+  }
+
+  /**
+   * Internal helper to dispose of material and its textures.
+   * @param {THREE.Material} mat
+   * @private
+   */
+  _disposeMaterial(mat) {
+    mat.dispose();
+
+    for (const key in mat) {
+      if (mat[key] && mat[key].isTexture) {
+        mat[key].dispose();
+      }
+    }
+
+    if (mat.uniforms) {
+      for (const key in mat.uniforms) {
+        const u = mat.uniforms[key];
+        if (u.value && u.value.isTexture) {
+          u.value.dispose();
+        }
+      }
+    }
+  }
 }

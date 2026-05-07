@@ -60,14 +60,7 @@ export class Road {
    * @private
    */
   _createVisualRoad() {
-    const geometry = new THREE.RingGeometry(
-      15,
-      25,
-      30,
-      4,
-      0,
-      6.283185307179586 / 2,
-    );
+    const geometry = new THREE.RingGeometry(15, 25, 30, 4, 0, Math.PI);
 
     const shader = SHADER_REGISTRY["road"];
     let x = 22.5;
@@ -91,14 +84,7 @@ export class Road {
       x += 40;
     }
 
-    const bigGeometry = new THREE.RingGeometry(
-      55,
-      65,
-      90,
-      4,
-      0,
-      6.283185307179586 / 2,
-    );
+    const bigGeometry = new THREE.RingGeometry(55, 65, 90, 4, 0, Math.PI);
 
     const bigMaterial = new THREE.ShaderMaterial({
       vertexShader: shader.vertex,
@@ -126,6 +112,49 @@ export class Road {
       this.materials.forEach((mat) => {
         mat.uniforms.time.value = elapsedTime;
       });
+    }
+  }
+
+  /**
+   * Cleans up GPU resources to prevent memory leaks.
+   */
+  dispose() {
+    this.group.traverse((child) => {
+      if (child.isMesh || child.isPoints) {
+        if (child.geometry) {
+          child.geometry.dispose();
+        }
+
+        if (child.material) {
+          this._disposeMaterial(child.material);
+        }
+      }
+    });
+
+    this.materials = [];
+    this.points = [];
+
+    if (this.sceneManager && this.group) {
+      this.sceneManager.scene.remove(this.group);
+    }
+    this.group.clear();
+  }
+
+  /**
+   * Helper to clean up shader materials and their uniforms.
+   * @param {THREE.Material} mat
+   * @private
+   */
+  _disposeMaterial(mat) {
+    mat.dispose();
+
+    if (mat.uniforms) {
+      for (const key in mat.uniforms) {
+        const u = mat.uniforms[key];
+        if (u.value && u.value.isTexture) {
+          u.value.dispose();
+        }
+      }
     }
   }
 }
