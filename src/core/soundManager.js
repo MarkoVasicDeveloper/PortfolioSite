@@ -46,7 +46,9 @@ export class SoundManager {
     const sfx = audio.cloneNode();
     sfx.volume = this._clamp(volume * this.masterVolume, 0, 1);
     sfx.play().catch((e) => {
-      if (e.name === "NotAllowedError") return;
+      if (e.name === "NotAllowedError") {
+        return;
+      }
       Logger.error("SoundManager", `Playback failed: ${e.message}`);
     });
   }
@@ -94,7 +96,9 @@ export class SoundManager {
    * Unlocks audio playback for browsers.
    */
   unlock() {
-    if (this.isUnlocked) return;
+    if (this.isUnlocked) {
+      return;
+    }
     this.isUnlocked = true;
 
     if (this.backgroundMusicKey) {
@@ -129,5 +133,3 @@ export class SoundManager {
     });
   }
 }
-
-export const soundManager = new SoundManager();

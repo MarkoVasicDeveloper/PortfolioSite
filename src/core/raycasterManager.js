@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import gsap from "gsap";
-import { soundManager } from "./soundManager";
 
 /**
  * Handles mouse/pointer intersection with 3D objects (Raycasting).
@@ -10,12 +9,15 @@ export class RaycasterManager {
   /**
    * @param {THREE.Camera} camera - The camera used for ray projection.
    * @param {THREE.Scene} scene - The scene containing interactive objects.
+   * @param {Object} soundManager - The audio service used to play interaction sounds.
    */
-  constructor(camera, scene) {
+  constructor(camera, scene, soundManager) {
     /** @type {THREE.Camera} */
     this.camera = camera;
     /** @type {THREE.Scene} */
     this.scene = scene;
+    /** @type {Object} */
+    this.soundManager = soundManager;
 
     /** @type {THREE.Raycaster} */
     this.raycaster = new THREE.Raycaster();
@@ -35,8 +37,8 @@ export class RaycasterManager {
    * @private
    */
   _init() {
-    window.addEventListener("pointermove", (e) => this._onPointerMove(e));
-    window.addEventListener("click", () => this._onClick());
+    window.addEventListener("pointermove", this._onPointerMove);
+    window.addEventListener("click", this._onClick);
   }
 
   /**
@@ -110,7 +112,7 @@ export class RaycasterManager {
    */
   _onClick() {
     if (this.hoveredObject && this.hoveredObject.userData.link) {
-      soundManager.play("click");
+      this.soundManager.play("click");
       window.open(this.hoveredObject.userData.link, "_blank");
     }
   }

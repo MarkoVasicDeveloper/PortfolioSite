@@ -7,7 +7,7 @@ import { World } from "./world/world.js";
 import { SceneManager } from "./core/sceneManager.js";
 import { CameraController } from "./core/cameraController.js";
 import { InputManager } from "./core/inputManager.js";
-import { soundManager } from "./core/soundManager.js";
+import { SoundManager } from "./core/soundManager.js";
 import { InteractionManager } from "./core/interactionManager.js";
 import { RaycasterManager } from "./core/raycasterManager.js";
 import { HudUI } from "./infrastructure/ui/headsUpDisplay.js";
@@ -20,6 +20,9 @@ const sceneManager = new SceneManager(canvas);
 const loadingManager = new THREE.LoadingManager();
 const assetManager = new AssetManager();
 const input = new InputManager();
+
+// --- Setup stereo ---
+const soundManager = new SoundManager();
 
 // --- Setup UI Managers ---
 const hud = new HudUI(soundManager);
@@ -45,7 +48,12 @@ assetManager.setExtensionMap(mapExtension);
 assetManager.setupProgress(loadingManager);
 
 // --- Systems Initialized after scene is ready ---
-new RaycasterManager(sceneManager.camera, sceneManager.scene, assetManager);
+new RaycasterManager(
+  sceneManager.camera,
+  sceneManager.scene,
+  assetManager,
+  soundManager,
+);
 
 /**
  * Main application entry point.
@@ -70,6 +78,7 @@ async function startApp() {
       sceneManager.camera,
       sceneManager.scene,
       interactionConfigs,
+      soundManager,
     );
 
     // Start the Render Loop
@@ -77,7 +86,9 @@ async function startApp() {
       const delta = input.popDeltaY();
 
       // Update systems
-      if (world.update) world.update(elapsedTime);
+      if (world.update) {
+        world.update(elapsedTime);
+      }
       cameraController.update(delta);
       interactionManager.update();
     });
