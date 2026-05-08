@@ -1,4 +1,5 @@
 import gsap from "gsap";
+import { ValidationError } from "./errors/error";
 
 /**
  * Manages spatial interactions between the camera and 3D objects.
@@ -12,6 +13,20 @@ export class InteractionManager {
    * @param {Object} soundManager - The audio service used to play interaction sounds.
    */
   constructor(camera, scene, configs, soundManager) {
+    if (!camera || !scene || !soundManager) {
+      throw new ValidationError(
+        "InteractionManager",
+        "Missing essential dependencies (camera, scene, or soundManager).",
+      );
+    }
+
+    if (!Array.isArray(configs) || configs.length === 0) {
+      throw new ValidationError(
+        "InteractionManager",
+        "Interaction configs array is empty or missing.",
+      );
+    }
+
     /** @type {THREE.Camera} */
     this.camera = camera;
     /** @type {THREE.Scene} */
@@ -59,6 +74,9 @@ export class InteractionManager {
    * Calculates distance to camera and triggers state changes.
    */
   update() {
+    if (!this.camera.position) {
+      return;
+    }
     const cameraPosition = this.camera.position;
 
     this.interactiveGroups.forEach((meshes) => {

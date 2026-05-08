@@ -1,4 +1,4 @@
-import { AssetError } from "./errors/assetError";
+import { AssetError } from "./errors/error";
 import { Logger } from "./logger";
 
 /**

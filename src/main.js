@@ -12,7 +12,10 @@ import { InteractionManager } from "./core/interactionManager.js";
 import { RaycasterManager } from "./core/raycasterManager.js";
 import { HudUI } from "./infrastructure/ui/headsUpDisplay.js";
 import { OrientationManager } from "./infrastructure/ui/orientationManager.js";
-import { Logger } from "./core/logger.js";
+import { ErrorReport } from "./core/errors/errorReport.js";
+
+// --- Setup Error System ---
+ErrorReport.init();
 
 // --- Setup Base Engine ---
 const canvas = document.querySelector("canvas.webgl");
@@ -29,17 +32,21 @@ const hud = new HudUI(soundManager);
 
 // This only triggers when the user clicks the "Enter" button
 new LoadingUI(assetManager, async () => {
-  // 1. Force landscape on mobile
-  await OrientationManager.handleMobileOrientation();
+  try {
+    // 1. Force landscape on mobile
+    await OrientationManager.handleMobileOrientation();
 
-  // 2. Unlock Audio Context (Browser requirement)
-  soundManager.unlock();
+    // 2. Unlock Audio Context (Browser requirement)
+    soundManager.unlock();
 
-  // 3. Start music only now
-  soundManager.startBackgroundMusic("backgroundMusic", 0.2);
+    // 3. Start music only now
+    soundManager.startBackgroundMusic("backgroundMusic", 0.2);
 
-  // 4. Reveal the HUD (Mute button, etc.)
-  hud.show();
+    // 4. Reveal the HUD (Mute button, etc.)
+    hud.show();
+  } catch (error) {
+    ErrorReport.handle(error);
+  }
 });
 
 // --- Configure Assets ---
@@ -83,17 +90,21 @@ async function startApp() {
 
     // Start the Render Loop
     sceneManager.render((elapsedTime) => {
-      const delta = input.popDeltaY();
+      try {
+        const delta = input.popDeltaY();
 
-      // Update systems
-      if (world.update) {
-        world.update(elapsedTime);
+        // Update systems
+        if (world.update) {
+          world.update(elapsedTime);
+        }
+        cameraController.update(delta);
+        interactionManager.update();
+      } catch (error) {
+        ErrorReport.handle(error);
       }
-      cameraController.update(delta);
-      interactionManager.update();
     });
   } catch (error) {
-    Logger.error("Critical loading error:", error);
+    ErrorReport.handle(error);
   }
 }
 

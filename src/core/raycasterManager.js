@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import gsap from "gsap";
+import { ValidationError } from "./errors/error";
 
 /**
  * Handles mouse/pointer intersection with 3D objects (Raycasting).
@@ -12,6 +13,13 @@ export class RaycasterManager {
    * @param {Object} soundManager - The audio service used to play interaction sounds.
    */
   constructor(camera, scene, soundManager) {
+    if (!camera || !scene || !soundManager) {
+      throw new ValidationError(
+        "RaycasterManager",
+        "Missing essential dependencies (camera, scene, or soundManager).",
+      );
+    }
+
     /** @type {THREE.Camera} */
     this.camera = camera;
     /** @type {THREE.Scene} */
@@ -49,6 +57,13 @@ export class RaycasterManager {
   _onPointerMove(event) {
     this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    if (!this.camera) {
+      throw new ValidationError(
+        "RaycasterManager",
+        "Camera reference lost during pointer move.",
+      );
+    }
 
     this.raycaster.setFromCamera(this.pointer, this.camera);
 

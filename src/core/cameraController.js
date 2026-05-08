@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { ValidationError } from "./errors/error";
 
 /**
  * Advanced camera controller for smooth path-following.
@@ -11,6 +12,19 @@ export class CameraController {
    * @param {Array<{x: number, y: number}>} curvePoints - Array of 2D points defining the path.
    */
   constructor(camera, curvePoints) {
+    if (!camera) {
+      throw new ValidationError(
+        "CameraController",
+        "Camera instance is missing!",
+      );
+    }
+
+    if (!curvePoints || !Array.isArray(curvePoints) || curvePoints.length < 2) {
+      throw new ValidationError(
+        "CameraController",
+        "Invalid curvePoints. Need at least 2 points.",
+      );
+    }
     /** @type {THREE.PerspectiveCamera} */
     this.camera = camera;
 
@@ -41,9 +55,6 @@ export class CameraController {
    * @param {number} inputDelta - Accumulated delta value from InputManager.
    */
   update(inputDelta) {
-    if (!this.camera || !this.path) {
-      return;
-    }
     this.targetProgress += inputDelta * this.sensitivity;
     this.currentProgress = THREE.MathUtils.lerp(
       this.currentProgress,

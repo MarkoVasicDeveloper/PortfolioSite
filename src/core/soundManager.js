@@ -1,3 +1,4 @@
+import { ValidationError } from "./errors/error";
 import { Logger } from "./logger";
 
 /**
@@ -20,6 +21,9 @@ export class SoundManager {
    * @param {Object} audioAssets - Audio dictionary from AssetManager.
    */
   setAudioAssets(audioAssets) {
+    if (!audioAssets || typeof audioAssets !== 'object') {
+      throw new ValidationError("SoundManager", "Invalid audio assets provided.");
+    }
     this.audioCache = audioAssets;
   }
 

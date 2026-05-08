@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { RenderError, ValidationError } from "./errors/error";
 
 /**
  * Orchestrates the 3D scene, camera, and renderer.
@@ -9,6 +10,13 @@ export class SceneManager {
    * @param {HTMLCanvasElement} canvas
    */
   constructor(canvas) {
+    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
+      throw new ValidationError(
+        "SceneManager",
+        "Canvas element is missing or invalid.",
+      );
+    }
+
     /** @type {HTMLCanvasElement} */
     this.canvas = canvas;
 
@@ -31,17 +39,24 @@ export class SceneManager {
    * @private
    */
   _setupRenderer() {
-    this.renderer = new THREE.WebGLRenderer({
-      canvas: this.canvas,
-      antialias: true,
-    });
+    try {
+      this.renderer = new THREE.WebGLRenderer({
+        canvas: this.canvas,
+        antialias: true,
+      });
 
-    this.renderer.autoClear = false;
-    this.renderer.setClearColor(new THREE.Color("#111111"));
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      this.renderer.autoClear = false;
+      this.renderer.setClearColor(new THREE.Color("#111111"));
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+      this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    } catch (error) {
+      throw new RenderError(
+        "Failed to initialize WebGL context. Hardware acceleration might be disabled.",
+        { originalError: error },
+      );
+    }
   }
 
   /**
