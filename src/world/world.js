@@ -3,15 +3,10 @@ import { ASSET_CONFIG } from "../config/assets";
 import { SHADER_REGISTRY } from "../shader/shaderRegistry";
 import { SHADER_UNIFORMS } from "../shader/uniforms";
 import { ProjectPanel } from "./projectPanel";
-import {
-  PANEL_CONFIG,
-  TITLES_CONFIG,
-  TECH_TEXT_CONFIG,
-} from "../config/configIndex";
+import { PANEL_CONFIG } from "../config/configIndex";
 import { Road } from "./road";
-import { TechText } from "./techText";
-import { Text3D } from "./text3d";
 import { Background } from "./background";
+import { TextManager } from "./textManager";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -35,6 +30,7 @@ export class World {
     this.projectPanels = [];
 
     this.road = new Road(this.sceneManager);
+    this.textManager = new TextManager(this.sceneManager, this.assetManager);
 
     this._init();
   }
@@ -47,9 +43,6 @@ export class World {
     this._setupLights();
     this._addStaticModels();
     this._addProjectPanels();
-    this._addTitles();
-    this._addTechTexts();
-    this._addHeroText();
     this._addBackground();
   }
 
@@ -140,61 +133,6 @@ export class World {
   }
 
   /**
-   * Initializes and adds floating 3D titles to the scene based on the configuration.
-   * Iterates through the TITLES_CONFIG and creates a new Title instance for each entry,
-   * passing the pre-loaded Permanent Marker font from the AssetManager.
-   *
-   * @private
-   * @returns {void}
-   */
-  _addTitles() {
-    TITLES_CONFIG.forEach((config) => {
-      const title = new Text3D(
-        config.text,
-        this.assetManager.fonts.fontPremanentMarker,
-        {
-          position: [...config.position],
-          rotationY: config.rotationY,
-          size: config.size,
-          scale: [0, 0, 0],
-          name: "title",
-        },
-      );
-      this.sceneManager.add(title);
-    });
-  }
-
-  /**
-   * Initializes technology description texts.
-   * @private
-   */
-  _addTechTexts() {
-    TECH_TEXT_CONFIG.forEach((config) => {
-      const techText = new TechText(config, this.assetManager.fonts.fontJson);
-      this.sceneManager.add(techText);
-    });
-  }
-
-  /**
-   * Creates the main "Hero" title with liquid shader effects.
-   * @private
-   */
-  _addHeroText() {
-    const heroText = new Text3D(
-      "Marko Vasic",
-      this.assetManager.fonts.fontJustAnotherHand,
-      {
-        size: 3.9,
-        position: [88, 1, 0],
-        rotationY: -Math.PI / 2,
-        shaderData: SHADER_REGISTRY.underwater,
-        uniforms: SHADER_UNIFORMS.underwater,
-      },
-    );
-    this.sceneManager.add(heroText);
-  }
-
-  /**
    * Initializes the background fog system and adds it to the persistent background scene.
    * Uses a dedicated shader and uniforms to create a fullscreen visual effect.
    *
@@ -224,6 +162,29 @@ export class World {
     });
 
     this.projectPanels.forEach((panel) => panel.update(elapsedTime));
+  }
+
+  /**
+   * Cleans up all resources to prevent memory leaks.
+   */
+  dispose() {
+    this.road.dispose();
+    this.fogBackground.dispose();
+    this.projectPanels.forEach((panel) => panel.dispose());
+
+    this.sceneManager.scene.traverse((child) => {
+      if (child.isMesh) {
+        child.geometry.dispose();
+
+        if (Array.isArray(child.material)) {
+          child.material.forEach((m) => m.dispose());
+        } else {
+          child.material.dispose();
+        }
+      }
+    });
+
+    this.projectPanels = [];
   }
 
   /** @returns {Array} Loaded points data. */

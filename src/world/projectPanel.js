@@ -215,8 +215,6 @@ export class ProjectPanel extends THREE.Group {
     });
 
     this.clear();
-
-    Logger.info("ProjectPanel", `${this.name} disposed.`);
   }
 
   /**

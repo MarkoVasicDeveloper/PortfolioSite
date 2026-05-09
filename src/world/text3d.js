@@ -74,7 +74,7 @@ export class Text3D extends THREE.Mesh {
     }
 
     if (options.scale) {
-      this.scale.set(0, 0, 0);
+      this.scale.set(...options.scale);
     }
   }
 
