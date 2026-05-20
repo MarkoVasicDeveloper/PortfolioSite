@@ -7,6 +7,7 @@ import { PANEL_CONFIG } from "../config/configIndex";
 import { Road } from "./road";
 import { Background } from "./background";
 import { TextManager } from "./textManager";
+import { HeroStageBuilder } from "../infrastructure/three/diorama/hero/heroStageBuilder";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -32,6 +33,9 @@ export class World {
     this.road = new Road(this.sceneManager);
     this.textManager = new TextManager(this.sceneManager, this.assetManager);
 
+    this.characterModel = null;
+    this.characterAnimations = null;
+
     this._init();
   }
 
@@ -50,13 +54,13 @@ export class World {
    * @private
    */
   _setupLights() {
-    const ambientalLight = new THREE.AmbientLight(0xffffff, 1);
+    const ambientalLight = new THREE.AmbientLight(0xffffff, 0.2);
 
-    const directionalLight = new THREE.DirectionalLight("#ffffff", 0.2);
-    directionalLight.position.set(2, 4, 1);
+    const directionalLight = new THREE.DirectionalLight("#ffffff", 2.5);
+    directionalLight.position.set(5, 15, 15);
 
     this.sceneManager.add(ambientalLight);
-    this.sceneManager.add(directionalLight);
+    // this.sceneManager.add(directionalLight);
   }
 
   /** * Iterates through ASSET_CONFIG to instantiate and position static 3D models.
@@ -82,6 +86,15 @@ export class World {
         if (rotation) {
           model.rotation.set(...rotation);
         }
+      }
+
+      if (config.name === "heroModel") {
+        this.stageBuilder = new HeroStageBuilder(this.sceneManager, asset);
+        const result = this.stageBuilder.build();
+        this.characterModel = result.characterModel;
+        this.characterAnimations = result.animations;
+
+        this.stageBuilder.alignLightsToModel();
       }
 
       if (config.shader && SHADER_UNIFORMS[config.uniforms]) {

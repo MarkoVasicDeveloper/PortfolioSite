@@ -1,4 +1,4 @@
-import myModel from "url:../../static/myModel.glb";
+import frog from "url:../../static/office_hero.glb";
 import matrixMan from "url:../../static/businesModel.glb";
 import gitModel from "url:../../static/git.glb";
 import cssModel from "url:../../static/CSS.glb";
@@ -17,7 +17,6 @@ import clickWav from "url:../../static/click.wav";
 import panelWav from "url:../../static/panel.wav";
 import titleWav from "url:../../static/title.wav";
 import textFade from "url:../../static/textFade.mp3";
-// import untitled from "url:../../static/untitled.glb";
 
 import main from "url:../texture/myPicture.jpg";
 import crazyBurger from "url:../texture/crazyBurger.png";
@@ -51,11 +50,11 @@ export const ASSET_CONFIG = {
   models: [
     {
       name: "heroModel",
-      url: myModel,
+      url: frog,
       transform: {
-        position: [15, 1, -25],
-        scale: [1.02, 1.02, 1.02],
-        rotation: [0, -Math.PI / 5, 0],
+        position: [10, 0, -25],
+        scale: [1, 1, 1],
+        rotation: [0, -Math.PI / 1.7, 0],
       },
     },
     {

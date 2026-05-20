@@ -51,6 +51,8 @@ export class SceneManager {
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      this.renderer.shadowMap.enabled = true;
+      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     } catch (error) {
       throw new RenderError(
         "Failed to initialize WebGL context. Hardware acceleration might be disabled.",
