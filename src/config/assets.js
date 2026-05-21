@@ -86,7 +86,6 @@ export const ASSET_CONFIG = {
         rotation: [0, Math.PI / 2, 0],
       },
     },
-    // { name: "untitled", url: untitled },
   ],
   iconModels: [
     { name: "git", url: gitModel },

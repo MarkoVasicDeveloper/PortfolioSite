@@ -8,6 +8,7 @@ import { Road } from "./road";
 import { Background } from "./background";
 import { TextManager } from "./textManager";
 import { HeroStageBuilder } from "../infrastructure/three/diorama/hero/heroStageBuilder";
+import { AnimationManager } from "../core/animationManager";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -33,8 +34,7 @@ export class World {
     this.road = new Road(this.sceneManager);
     this.textManager = new TextManager(this.sceneManager, this.assetManager);
 
-    this.characterModel = null;
-    this.characterAnimations = null;
+    this._lastTime = 0;
 
     this._init();
   }
@@ -63,8 +63,9 @@ export class World {
     // this.sceneManager.add(directionalLight);
   }
 
-  /** * Iterates through ASSET_CONFIG to instantiate and position static 3D models.
-   * Applies custom shaders if specified in the configuration.
+  /**
+   * Iterates through asset configurations to instantiate, transform,
+   * and inject static 3D models into the active scene.
    * @private
    */
   _addStaticModels() {
@@ -75,44 +76,66 @@ export class World {
       }
 
       const model = asset.scene || asset;
-      if (config.transform) {
-        const { position, scale, rotation } = config.transform;
-        if (position) {
-          model.position.set(...position);
-        }
-        if (scale) {
-          model.scale.set(...scale);
-        }
-        if (rotation) {
-          model.rotation.set(...rotation);
-        }
-      }
+
+      this._applyTransforms(model, config.transform);
+      this._applyShaders(model, config);
 
       if (config.name === "heroModel") {
-        this.stageBuilder = new HeroStageBuilder(this.sceneManager, asset);
-        const result = this.stageBuilder.build();
-        this.characterModel = result.characterModel;
-        this.characterAnimations = result.animations;
-
-        this.stageBuilder.alignLightsToModel();
-      }
-
-      if (config.shader && SHADER_UNIFORMS[config.uniforms]) {
-        const shaderData = SHADER_REGISTRY[config.shader];
-
-        model.traverse((child) => {
-          if (child.isMesh) {
-            child.material = new THREE.ShaderMaterial({
-              vertexShader: shaderData.vertex,
-              fragmentShader: shaderData.fragment,
-              uniforms: SHADER_UNIFORMS[config.uniforms],
-            });
-          }
-        });
+        this._setupHeroDiorama(asset);
       }
 
       this.sceneManager.add(model);
     });
+  }
+
+  /** @private */
+  _applyTransforms(model, transform) {
+    if (!transform) {
+      return;
+    }
+    const { position, scale, rotation } = transform;
+
+    if (position) {
+      model.position.set(...position);
+    }
+    if (scale) {
+      model.scale.set(...scale);
+    }
+    if (rotation) {
+      model.rotation.set(...rotation);
+    }
+  }
+
+  /** @private */
+  _applyShaders(model, config) {
+    if (!config.shader || !SHADER_UNIFORMS[config.uniforms]) {
+      return;
+    }
+
+    const shaderData = SHADER_REGISTRY[config.shader];
+
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.material = new THREE.ShaderMaterial({
+          vertexShader: shaderData.vertex,
+          fragmentShader: shaderData.fragment,
+          uniforms: SHADER_UNIFORMS[config.uniforms],
+        });
+      }
+    });
+  }
+
+  /** @private */
+  _setupHeroDiorama(asset) {
+    this.stageBuilder = new HeroStageBuilder(this.sceneManager, asset);
+    const { characterModel, animations } = this.stageBuilder.build();
+
+    if (characterModel && animations.length > 0) {
+      this.animationManager = new AnimationManager(characterModel, animations);
+      this.animationManager.play("typing");
+    }
+
+    this.stageBuilder.alignLightsToModel();
   }
 
   /** * Instantiates project panels based on PANEL_CONFIG.
@@ -166,6 +189,9 @@ export class World {
    * @param {number} elapsedTime - Total time since application start.
    */
   update(elapsedTime) {
+    const deltaTime = elapsedTime - this._lastTime;
+    this._lastTime = elapsedTime;
+
     this.road.update(elapsedTime);
 
     Object.values(SHADER_UNIFORMS).forEach((u) => {
@@ -175,6 +201,9 @@ export class World {
     });
 
     this.projectPanels.forEach((panel) => panel.update(elapsedTime));
+    if (this.animationManager) {
+      this.animationManager.update(deltaTime);
+    }
   }
 
   /**
@@ -198,6 +227,10 @@ export class World {
     });
 
     this.projectPanels = [];
+
+    if (this.animationManager) {
+      this.animationManager.dispose();
+    }
   }
 
   /** @returns {Array} Loaded points data. */
