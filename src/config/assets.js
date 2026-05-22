@@ -1,4 +1,5 @@
-import frog from "url:../../static/office_hero.glb";
+import office from "url:../../static/office.glb";
+import frog from "url:../../static/frog.glb";
 import matrixMan from "url:../../static/businesModel.glb";
 import gitModel from "url:../../static/git.glb";
 import cssModel from "url:../../static/CSS.glb";
@@ -49,7 +50,16 @@ import python from "url:../texture/python.jpg";
 export const ASSET_CONFIG = {
   models: [
     {
-      name: "heroModel",
+      name: "office",
+      url: office,
+      transform: {
+        position: [10, 0, -25],
+        scale: [1, 1, 1],
+        rotation: [0, -Math.PI / 1.7, 0],
+      },
+    },
+    {
+      name: "frog",
       url: frog,
       transform: {
         position: [10, 0, -25],

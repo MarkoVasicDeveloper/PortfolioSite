@@ -20,7 +20,7 @@ export class HeroStageBuilder {
     /** @type {Object} */
     this.sceneManager = sceneManager;
     /** @type {THREE.Scene|Object} */
-    this.heroModel = model;
+    this.office = model;
 
     /** @type {THREE.DirectionalLight|null} */
     this.topLight = null;
@@ -45,11 +45,9 @@ export class HeroStageBuilder {
 
   /**
    * Parses the hierarchy, configures PBR materials, shadows, and computes spatial bounds.
-   * @returns {StageBuilderResult} Extracted model references and animations.
    */
   build() {
-    this.officeScene = this.heroModel.scene || this.heroModel;
-    let characterModel = null;
+    this.officeScene = this.office.scene || this.office;
 
     this.officeScene.traverse((child) => {
       if (child.isMesh) {
@@ -61,9 +59,15 @@ export class HeroStageBuilder {
         }
 
         if (child.name.toLowerCase() === "screen") {
-          child.material = child.material.clone();
+          const oldMaterial = child.material;
+
+          child.material = oldMaterial.clone();
           child.material.emissive = new THREE.Color(0x00a8ff);
           child.material.emissiveIntensity = 2.0;
+
+          if (oldMaterial) {
+            oldMaterial.dispose();
+          }
 
           this.screenMesh = child;
           this.screenMesh.geometry.computeBoundingBox();
@@ -76,18 +80,9 @@ export class HeroStageBuilder {
           child.material.roughness = 0.6;
         }
       }
-
-      if (child.name === "Armature" || child.name === "Frog") {
-        characterModel = child;
-      }
     });
 
     this._initLights();
-
-    return {
-      characterModel,
-      animations: this.heroModel.animations || [],
-    };
   }
 
   /**

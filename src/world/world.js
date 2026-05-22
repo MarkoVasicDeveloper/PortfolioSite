@@ -8,7 +8,7 @@ import { Road } from "./road";
 import { Background } from "./background";
 import { TextManager } from "./textManager";
 import { HeroStageBuilder } from "../infrastructure/three/diorama/hero/heroStageBuilder";
-import { AnimationManager } from "../core/animationManager";
+import { FrogCharacter } from "./frogCharacter";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -75,17 +75,30 @@ export class World {
         return;
       }
 
+      if (config.name === "frog") {
+        this._addFrogCharacter(asset, config);
+        return;
+      }
+
       const model = asset.scene || asset;
 
       this._applyTransforms(model, config.transform);
       this._applyShaders(model, config);
 
-      if (config.name === "heroModel") {
-        this._setupHeroDiorama(asset);
+      if (config.name === "office") {
+        this._setupHeroDiorama(model);
       }
 
       this.sceneManager.add(model);
     });
+  }
+
+  /** @private */
+  _addFrogCharacter(frogAsset, config) {
+    this.frog = new FrogCharacter(frogAsset);
+    this._applyTransforms(this.frog.container, config.transform);
+    this.frog.play("typing");
+    this.sceneManager.add(this.frog.container);
   }
 
   /** @private */
@@ -128,13 +141,7 @@ export class World {
   /** @private */
   _setupHeroDiorama(asset) {
     this.stageBuilder = new HeroStageBuilder(this.sceneManager, asset);
-    const { characterModel, animations } = this.stageBuilder.build();
-
-    if (characterModel && animations.length > 0) {
-      this.animationManager = new AnimationManager(characterModel, animations);
-      this.animationManager.play("typing");
-    }
-
+    this.stageBuilder.build();
     this.stageBuilder.alignLightsToModel();
   }
 
@@ -201,8 +208,9 @@ export class World {
     });
 
     this.projectPanels.forEach((panel) => panel.update(elapsedTime));
-    if (this.animationManager) {
-      this.animationManager.update(deltaTime);
+
+    if (this.frog) {
+      this.frog.update(deltaTime);
     }
   }
 
@@ -227,9 +235,8 @@ export class World {
     });
 
     this.projectPanels = [];
-
-    if (this.animationManager) {
-      this.animationManager.dispose();
+    if (this.frog) {
+      this.frog.dispose();
     }
   }
 
