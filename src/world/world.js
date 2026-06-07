@@ -9,6 +9,7 @@ import { Background } from "./background";
 import { TextManager } from "./textManager";
 import { HeroStageBuilder } from "../infrastructure/three/diorama/hero/heroStageBuilder";
 import { FrogCharacter } from "./frogCharacter";
+import { FROG_TRIGGER_CONFIG } from "../config/frogTriggerConfig";
 
 /**
  * World class handles everything that lives INSIDE the scene.
@@ -95,9 +96,12 @@ export class World {
 
   /** @private */
   _addFrogCharacter(frogAsset, config) {
-    this.frog = new FrogCharacter(frogAsset);
+    this.frog = new FrogCharacter(
+      frogAsset,
+      this.sceneManager.camera,
+      FROG_TRIGGER_CONFIG,
+    );
     this._applyTransforms(this.frog.container, config.transform);
-    this.frog.play("typing");
     this.sceneManager.add(this.frog.container);
   }
 
