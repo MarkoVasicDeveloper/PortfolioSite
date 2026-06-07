@@ -54,12 +54,17 @@ export class AnimationManager {
   }
 
   /**
-   * Plays or smoothly transitions to a targeted animation.
-   * @param {string} name - The name of the animation clip.
+   * Plays or smoothly transitions to a targeted animation using contextual configurations.
+   * @param {Object} step - The configuration step object from the sequence.
+   * @param {string} step.name - The name of the animation clip.
+   * @param {boolean} [step.loop] - Flag indicating if the track loops.
+   * @param {number} [step.repeat] - Loop repeat counter limit.
+   * @param {number} [step.timeScale] - Velocity modifier.
    * @param {number} [duration=0.5] - Crossfade duration in seconds.
    * @returns {THREE.AnimationAction|null} The activated action.
    */
-  play(name, duration = 0.5) {
+  play(step, duration = 0.5) {
+    const { name, loop, repeat, timeScale } = step;
     const nextAction = this.actions.get(name);
 
     if (!nextAction) {
@@ -73,12 +78,27 @@ export class AnimationManager {
       return nextAction;
     }
 
-    if (!this.currentAction) {
-      nextAction.reset().fadeIn(duration).play();
+    nextAction.reset();
+
+    const targetTimeScale = timeScale !== undefined ? timeScale : 1.0;
+    nextAction.setEffectiveTimeScale(targetTimeScale);
+    nextAction.setEffectiveWeight(1.0);
+
+    nextAction.clampWhenFinished = true;
+
+    if (repeat && loop) {
+      nextAction.setLoop(THREE.LoopRepeat, repeat);
+    } else if (!loop) {
+      nextAction.setLoop(THREE.LoopOnce);
     } else {
-      nextAction.reset();
+      nextAction.setLoop(THREE.LoopRepeat);
+    }
+
+    if (!this.currentAction) {
+      nextAction.fadeIn(duration).play();
+    } else {
       nextAction.play();
-      this.currentAction.crossFadeTo(nextAction, duration, true);
+      this.currentAction.crossFadeTo(nextAction, duration, false);
     }
 
     this.currentAction = nextAction;
