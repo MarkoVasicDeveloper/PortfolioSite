@@ -2,14 +2,8 @@ import * as THREE from "three";
 import { LIGHT_CONFIG } from "../../../../config/heroDioram";
 
 /**
- * @typedef {Object} StageBuilderResult
- * @property {THREE.Object3D|null} characterModel - The extracted character mesh (Frog/Armature).
- * @property {THREE.AnimationClip[]} animations - Animations associated with the loaded model.
- */
-
-/**
- * HeroStageBuilder responsibility is to isolate the configuration,
- * material mapping, shadow settings, and precise lighting alignment for the Hero Diorama.
+ * HeroStageBuilder isolates the configuration, material mapping,
+ * shadow settings, and precise lighting alignment for the Hero Diorama.
  */
 export class HeroStageBuilder {
   /**
@@ -48,41 +42,82 @@ export class HeroStageBuilder {
    */
   build() {
     this.officeScene = this.office.scene || this.office;
+    const AMBIENT_DARKNESS = 0.3;
+    const DEFAULT_ROUGHNESS = 0.8;
+    const DEFAULT_METALNESS = 0.1;
 
     this.officeScene.traverse((child) => {
-      if (child.isMesh) {
-        if (child.material.type === "MeshBasicMaterial") {
-          child.material = new THREE.MeshStandardMaterial({
-            color: child.material.color,
-            map: child.material.map,
-          });
-        }
-
-        if (child.name.toLowerCase() === "screen") {
-          const oldMaterial = child.material;
-
-          child.material = oldMaterial.clone();
-          child.material.emissive = new THREE.Color(0x00a8ff);
-          child.material.emissiveIntensity = 2.0;
-
-          if (oldMaterial) {
-            oldMaterial.dispose();
-          }
-
-          this.screenMesh = child;
-          this.screenMesh.geometry.computeBoundingBox();
-        }
-
-        child.castShadow = true;
-        child.receiveShadow = true;
-
-        if (child.material) {
-          child.material.roughness = 0.6;
-        }
+      if (!child.isMesh) {
+        return;
       }
+
+      if (child.name.toLowerCase() === "screen") {
+        this._setupScreenMesh(child);
+        return;
+      }
+
+      if (child.material) {
+        this._optimizeMaterial(
+          child,
+          AMBIENT_DARKNESS,
+          DEFAULT_ROUGHNESS,
+          DEFAULT_METALNESS,
+        );
+      }
+
+      child.castShadow = true;
+      child.receiveShadow = true;
     });
 
     this._initLights();
+  }
+
+  /**
+   * Optimizes standard mesh materials to handle low-light environments correctly.
+   * @private
+   */
+  _optimizeMaterial(mesh, darknessFactor, roughness, metalness) {
+    const oldMaterial = mesh.material;
+    const originalColor = oldMaterial.color
+      ? oldMaterial.color.clone()
+      : new THREE.Color(0xffffff);
+
+    originalColor.multiplyScalar(darknessFactor);
+
+    mesh.material = new THREE.MeshStandardMaterial({
+      color: originalColor,
+      map: oldMaterial.map,
+      roughness: roughness,
+      metalness: metalness,
+    });
+
+    oldMaterial.dispose();
+  }
+
+  /**
+   * Configures the neon emission material specifically for the monitor screen.
+   * @private
+   */
+  _setupScreenMesh(mesh) {
+    const oldMaterial = mesh.material;
+
+    mesh.material = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(0x111111),
+      map: oldMaterial ? oldMaterial.map : null,
+      emissive: new THREE.Color(0x00a8ff),
+      emissiveIntensity: 2.0,
+      roughness: 0.2,
+    });
+
+    if (oldMaterial) {
+      oldMaterial.dispose();
+    }
+
+    this.screenMesh = mesh;
+    this.screenMesh.geometry.computeBoundingBox();
+
+    this.screenMesh.castShadow = true;
+    this.screenMesh.receiveShadow = true;
   }
 
   /**
@@ -99,8 +134,7 @@ export class HeroStageBuilder {
       1,
     );
     this.neonBlueLight.castShadow = true;
-    this.neonBlueLight.shadow.mapSize.width = 1024;
-    this.neonBlueLight.shadow.mapSize.height = 1024;
+    this.neonBlueLight.shadow.mapSize.set(1024, 1024);
     this.neonBlueLight.shadow.bias = -0.001;
 
     this.customNeonTarget = new THREE.Object3D();
@@ -111,17 +145,17 @@ export class HeroStageBuilder {
 
     this.topLight = new THREE.DirectionalLight(0xffe6b3, 2.5);
     this.topLight.castShadow = true;
-    this.topLight.shadow.mapSize.width = 1024;
-    this.topLight.shadow.mapSize.height = 1024;
+    this.topLight.shadow.mapSize.set(1024, 1024);
     this.topLight.shadow.bias = -0.0005;
 
     const boxSize = LIGHT_CONFIG.directional.boxSize;
-    this.topLight.shadow.camera.left = -boxSize;
-    this.topLight.shadow.camera.right = boxSize;
-    this.topLight.shadow.camera.top = boxSize;
-    this.topLight.shadow.camera.bottom = -boxSize;
-    this.topLight.shadow.camera.near = 1;
-    this.topLight.shadow.camera.far = 15;
+    const shadowCam = this.topLight.shadow.camera;
+    shadowCam.left = -boxSize;
+    shadowCam.right = boxSize;
+    shadowCam.top = boxSize;
+    shadowCam.bottom = -boxSize;
+    shadowCam.near = 1;
+    shadowCam.far = 15;
 
     this.lightTarget = new THREE.Object3D();
     this.sceneManager.add(this.lightTarget);
@@ -131,9 +165,7 @@ export class HeroStageBuilder {
   }
 
   /**
-   * Late initialization step. Magnifies world transforms and aligns the lights
-   * to the physical geometry center of the screen mesh.
-   * Call this ONCE right after the model is positioned in the world scene.
+   * Aligns the lights to the physical geometry center of the screen mesh.
    */
   alignLightsToModel() {
     if (
