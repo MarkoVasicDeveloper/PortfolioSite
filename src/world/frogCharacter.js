@@ -64,7 +64,8 @@ export class FrogCharacter {
   }
 
   /**
-   * Internal component bootstrapper. Compiles spatial node links and registers subsystems.
+   * Internal component bootstrapper. Compiles spatial node links,
+   * optimizes shading materials for low-light environments, and registers subsystems.
    * @param {THREE.AnimationClip[]} animations - Cached array of clips extracted from the asset root.
    * @private
    * @returns {void}
@@ -72,10 +73,42 @@ export class FrogCharacter {
   _init(animations) {
     this.container.add(this.rawModel);
 
+    this._optimizeMaterialsForDiorama();
+
     this.animationManager = new AnimationManager(this.rawModel, animations);
     this.dioramaManager = new DioramaManager(this);
 
     this.setVisibility(true);
+  }
+
+  /**
+   * Traverses the model hierarchy to dim material base colors and adjust roughness,
+   * ensuring the mesh blends naturally into the dark cyber-punk diorama.
+   * @private
+   * @returns {void}
+   */
+  _optimizeMaterialsForDiorama() {
+    const DARKNESS_FACTOR = 0.3;
+    const TARGET_ROUGHNESS = 0.85;
+
+    this.rawModel.traverse((child) => {
+      if (!child.isMesh || !child.material) {
+        return;
+      }
+
+      const materials = Array.isArray(child.material)
+        ? child.material
+        : [child.material];
+
+      materials.forEach((mat) => {
+        if (mat.color) {
+          mat.color.multiplyScalar(DARKNESS_FACTOR);
+        }
+        if ("roughness" in mat) {
+          mat.roughness = TARGET_ROUGHNESS;
+        }
+      });
+    });
   }
 
   /**
