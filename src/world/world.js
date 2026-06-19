@@ -55,13 +55,12 @@ export class World {
    * @private
    */
   _setupLights() {
-    const ambientalLight = new THREE.AmbientLight(0xffffff, 0.2);
-
-    const directionalLight = new THREE.DirectionalLight("#ffffff", 2.5);
-    directionalLight.position.set(5, 15, 15);
-
+    const ambientalLight = new THREE.AmbientLight(0xffffff, 0.6);
     this.sceneManager.add(ambientalLight);
-    // this.sceneManager.add(directionalLight);
+
+    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x444444, 0.8);
+    hemisphereLight.position.set(0, 20, 0);
+    this.sceneManager.add(hemisphereLight);
   }
 
   /**
