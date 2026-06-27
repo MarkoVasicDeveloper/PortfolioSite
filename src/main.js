@@ -3,7 +3,6 @@ import { AssetManager } from "./core/assetManager.js";
 import { createThreeExtensionMap } from "./infrastructure/three/threeAssetConfig.js";
 import { LoadingUI } from "./infrastructure/ui/loadingUI.js";
 import { ASSET_CONFIG, interactionConfigs } from "./config/configIndex.js";
-import { World } from "./world/world.js";
 import { SceneManager } from "./core/sceneManager.js";
 import { CameraController } from "./core/cameraController.js";
 import { InputManager } from "./core/inputManager.js";
@@ -68,8 +67,12 @@ new RaycasterManager(
  */
 async function startApp() {
   try {
-    // Wait for all assets (models, textures, sounds)
-    await assetManager.allLoad(ASSET_CONFIG);
+    const [worldModule] = await Promise.all([
+      import("./world/world.js"),
+      assetManager.allLoad(ASSET_CONFIG),
+    ]);
+
+    const World = worldModule.World;
 
     // Distribute loaded audio to manager
     soundManager.setAudioAssets(assetManager.audio);
