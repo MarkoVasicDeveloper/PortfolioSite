@@ -9,6 +9,13 @@ vi.mock("three", async () => {
     constructor() {
       this.domElement = document.createElement("canvas");
       this.autoClear = false;
+
+      this.shadowMap = {
+        enabled: false,
+        type: null,
+      };
+      this.outputColorSpace = null;
+      this.toneMapping = null;
     }
     setSize() {
       return this;
