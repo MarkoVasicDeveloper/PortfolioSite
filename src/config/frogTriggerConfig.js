@@ -15,7 +15,7 @@ export const FROG_TRIGGER_CONFIG = [
   {
     id: "main_zone",
     position: [-5, 4, -10],
-    radius: 15,
+    radius: 23,
     command: "SIT_AND_TYPE",
   },
 ];
