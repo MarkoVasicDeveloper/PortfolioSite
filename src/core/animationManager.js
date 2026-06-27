@@ -95,7 +95,8 @@ export class AnimationManager {
     }
 
     if (!this.currentAction) {
-      nextAction.fadeIn(duration).play();
+      nextAction.play();
+      this.mixer.update(0);
     } else {
       nextAction.play();
       this.currentAction.crossFadeTo(nextAction, duration, false);
@@ -103,6 +104,25 @@ export class AnimationManager {
 
     this.currentAction = nextAction;
     return nextAction;
+  }
+
+  /**
+   * Safely stops the currently playing animation and resets the state track.
+   * Smoothly fades out the action if duration is provided.
+   * @param {number} [duration=0.2] - Fade out transition time.
+   */
+  stop(duration = 0.2) {
+    if (!this.currentAction) {
+      return;
+    }
+
+    if (duration > 0) {
+      this.currentAction.fadeOut(duration);
+    } else {
+      this.currentAction.stop();
+    }
+
+    this.currentAction = null;
   }
 
   /**

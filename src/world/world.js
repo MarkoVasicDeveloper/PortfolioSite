@@ -15,7 +15,6 @@ import { FROG_TRIGGER_CONFIG } from "../config/frogTriggerConfig";
  * World class handles everything that lives INSIDE the scene.
  * Models, Lights, Environment, etc.
  */
-
 export class World {
   /**
    * @param {import('../core/sceneManager').SceneManager} sceneManager
@@ -32,10 +31,26 @@ export class World {
      */
     this.projectPanels = [];
 
+    /** @type {Road} */
     this.road = new Road(this.sceneManager);
+
+    /** @type {TextManager} */
     this.textManager = new TextManager(this.sceneManager, this.assetManager);
 
+    /** @type {number} */
     this._lastTime = 0;
+
+    /** @type {string|null} */
+    this._previousZoneId = null;
+
+    /** @type {FrogCharacter|null} */
+    this.frog = null;
+
+    /** @type {HeroStageBuilder|null} */
+    this.stageBuilder = null;
+
+    /** @type {Background|null} */
+    this.fogBackground = null;
 
     this._init();
   }
@@ -43,6 +58,7 @@ export class World {
   /**
    * Internal initialization sequence.
    * @private
+   * @returns {void}
    */
   _init() {
     this._setupLights();
@@ -53,6 +69,7 @@ export class World {
 
   /** * Initializes ambient and directional lighting for the world.
    * @private
+   * @returns {void}
    */
   _setupLights() {
     const ambientalLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -67,6 +84,7 @@ export class World {
    * Iterates through asset configurations to instantiate, transform,
    * and inject static 3D models into the active scene.
    * @private
+   * @returns {void}
    */
   _addStaticModels() {
     ASSET_CONFIG.models.forEach((config) => {
@@ -93,7 +111,13 @@ export class World {
     });
   }
 
-  /** @private */
+  /**
+   * Instantiates and configures the Frog character entity.
+   * @param {Object} frogAsset - Raw graphic asset.
+   * @param {Object} config - Asset transformation configuration.
+   * @private
+   * @returns {void}
+   */
   _addFrogCharacter(frogAsset, config) {
     this.frog = new FrogCharacter(
       frogAsset,
@@ -104,7 +128,13 @@ export class World {
     this.sceneManager.add(this.frog.container);
   }
 
-  /** @private */
+  /**
+   * Applies spatial transformations to a 3D target node.
+   * @param {THREE.Object3D} model - Target 3D object container.
+   * @param {Object} transform - Transformation parameters.
+   * @private
+   * @returns {void}
+   */
   _applyTransforms(model, transform) {
     if (!transform) {
       return;
@@ -122,7 +152,13 @@ export class World {
     }
   }
 
-  /** @private */
+  /**
+   * Traverses the model hierarchy and injects custom shader materials.
+   * @param {THREE.Object3D} model - Target 3D hierarchy.
+   * @param {Object} config - Configuration object containing keys for shaders and uniforms.
+   * @private
+   * @returns {void}
+   */
   _applyShaders(model, config) {
     if (!config.shader || !SHADER_UNIFORMS[config.uniforms]) {
       return;
@@ -141,16 +177,46 @@ export class World {
     });
   }
 
-  /** @private */
+  /**
+   * Initial setup and alignment for the Hero office diorama environment.
+   * @param {THREE.Object3D} asset - Loaded office model context.
+   * @private
+   * @returns {void}
+   */
   _setupHeroDiorama(asset) {
     this.stageBuilder = new HeroStageBuilder(this.sceneManager, asset);
     this.stageBuilder.build();
     this.stageBuilder.alignLightsToModel();
+    this._setOfficeVisibility(true);
   }
 
-  /** * Instantiates project panels based on PANEL_CONFIG.
+  /**
+   * Dispatches explicit visibility states to the office scene bounds and associated shadow lights.
+   * @param {boolean} visible - Target visibility flag state.
+   * @private
+   * @returns {void}
+   */
+  _setOfficeVisibility(visible) {
+    if (!this.stageBuilder) {
+      return;
+    }
+
+    if (this.stageBuilder.officeScene) {
+      this.stageBuilder.officeScene.visible = visible;
+    }
+    if (this.stageBuilder.neonBlueLight) {
+      this.stageBuilder.neonBlueLight.visible = visible;
+    }
+    if (this.stageBuilder.topLight) {
+      this.stageBuilder.topLight.visible = visible;
+    }
+  }
+
+  /**
+   * Instantiates project panels based on PANEL_CONFIG.
    * Maps loaded textures to shader uniforms and positions panels in space.
    * @private
+   * @returns {void}
    */
   _addProjectPanels() {
     PANEL_CONFIG.forEach((config) => {
@@ -180,8 +246,6 @@ export class World {
 
   /**
    * Initializes the background fog system and adds it to the persistent background scene.
-   * Uses a dedicated shader and uniforms to create a fullscreen visual effect.
-   *
    * @private
    * @returns {void}
    */
@@ -195,8 +259,9 @@ export class World {
 
   /**
    * Main update loop for the world.
-   * Updates global shader uniforms (like time) and individual panel animations.
-   * @param {number} elapsedTime - Total time since application start.
+   * Updates global shader uniforms and processes dynamic zone transitions.
+   * @param {number} elapsedTime - Total time since application start in seconds.
+   * @returns {void}
    */
   update(elapsedTime) {
     const deltaTime = elapsedTime - this._lastTime;
@@ -214,11 +279,19 @@ export class World {
 
     if (this.frog) {
       this.frog.update(deltaTime);
+
+      if (this.frog.currentZoneId !== this._previousZoneId) {
+        this._previousZoneId = this.frog.currentZoneId;
+
+        const isInsideOffice = this.frog.currentZoneId === "main_zone";
+        this._setOfficeVisibility(isInsideOffice);
+      }
     }
   }
 
   /**
-   * Cleans up all resources to prevent memory leaks.
+   * Cleans up all resources, geometry and materials to prevent browser memory leaks.
+   * @returns {void}
    */
   dispose() {
     this.road.dispose();
@@ -243,7 +316,10 @@ export class World {
     }
   }
 
-  /** @returns {Array} Loaded points data. */
+  /**
+   * Fetches path positioning spline navigation points data.
+   * @type {Array<THREE.Vector3>}
+   */
   get points() {
     return this.road.points;
   }

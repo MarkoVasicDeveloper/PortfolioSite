@@ -191,8 +191,8 @@ export class FrogCharacter {
       this.currentZoneId = activeZone ? activeZone.id : null;
 
       if (activeZone) {
-        this.setVisibility(true);
         this.dioramaManager.switchDiorama(activeZone.command);
+        this.setVisibility(true);
       } else {
         this.setVisibility(false);
         this.dioramaManager.clear();

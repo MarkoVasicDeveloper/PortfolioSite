@@ -6,7 +6,7 @@ import { ErrorReport } from "../../../../core/errors/errorReport";
 /**
  * Representation of a structured, sequence-driven animation diorama for the Hero character.
  * Implements a data-driven Finite State Machine (FSM) that loops through automated animation flows.
- * * @extends BaseDiorama
+ * @extends BaseDiorama
  */
 export class HeroDiorama extends BaseDiorama {
   /**
@@ -17,22 +17,26 @@ export class HeroDiorama extends BaseDiorama {
   constructor(frog, config) {
     super(frog, config);
 
-    /** * Index tracking the currently active sequence template from the global pool.
+    /**
+     * Index tracking the currently active sequence template from the global pool.
      * @type {number}
      */
     this.poolIndex = 0;
 
-    /** * Deep copy of the active animation sequence track currently playing.
+    /**
+     * Deep copy of the active animation sequence track currently playing.
      * @type {Array<Object>}
      */
     this.activeSequence = [];
 
-    /** * Pointer tracking the current step/animation index within the active sequence.
+    /**
+     * Pointer tracking the current step/animation index within the active sequence.
      * @type {number}
      */
     this.sequenceIndex = 0;
 
-    /** * Cached bound event handler reference for the Three.js AnimationMixer listener removal.
+    /**
+     * Cached bound event handler reference for the Three.js AnimationMixer listener removal.
      * @type {Function}
      */
     this.onFinishedBound = this._onFinished.bind(this);
@@ -80,8 +84,7 @@ export class HeroDiorama extends BaseDiorama {
   }
 
   /**
-   * Configures standard playback properties (looping, clamping, timescale)
-   * and dispatches execution commands to the core AnimationManager.
+   * Configures standard playback properties and dispatches execution commands to the core AnimationManager.
    * @private
    * @returns {void}
    */
@@ -98,7 +101,8 @@ export class HeroDiorama extends BaseDiorama {
   /**
    * Event listener callback triggered synchronously when a non-looping Three.js animation action finishes.
    * Evaluates sequential progress and triggers incremental stepping.
-   * @param {THREE.Event} e - Native event payload emitted by the THREE.AnimationMixer.
+   * @param {Object} e - Native event payload emitted by the THREE.AnimationMixer.
+   * @param {Object} e.action - The specific AnimationAction that just completed.
    * @private
    * @returns {void}
    */
@@ -123,8 +127,7 @@ export class HeroDiorama extends BaseDiorama {
   }
 
   /**
-   * Clears event subscriptions and nullifies domain model bindings
-   * to guarantee memory release for browser garbage collection cycles.
+   * Clears event subscriptions and nullifies domain model bindings to guarantee memory release.
    * @override
    * @returns {void}
    */
@@ -134,8 +137,11 @@ export class HeroDiorama extends BaseDiorama {
       this.onFinishedBound,
     );
 
+    if (this.frog.animationManager) {
+      this.frog.animationManager.stop(0);
+    }
+
     this.activeSequence = [];
-    this.frog = null;
-    this.config = null;
+    this.sequenceIndex = 0;
   }
 }
